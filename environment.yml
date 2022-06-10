@@ -1,0 +1,32 @@
+name: phenotype-mapping
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.8
+  # dev
+  - black
+  - isort
+  - autoflake
+  - flake8
+  - jupyterlab
+  - nodejs
+  - mypy
+  # rest
+  - pydash
+  - loguru
+  - icecream
+  - numpy
+  - pandas
+  - seaborn
+  - nltk
+  - gensim
+  - environs
+  - spacy
+  - pip
+  - pip:
+    - nb_black
+    - nxontology
+    - scispacy
