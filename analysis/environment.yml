@@ -33,3 +33,5 @@ dependencies:
     - nxontology
     - scispacy
     - spacy
+    - pandera
+    - tqdm
