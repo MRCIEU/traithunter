@@ -1,0 +1,32 @@
+version: "3.4"
+
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.3
+    restart: unless-stopped
+    ports:
+      - ${DOCKER_ES_PORT:-6350}:9200
+    tty: true
+    volumes:
+      - phenotype_es_data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - path.repo=/usr/share/elasticsearch/backup
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.2.3
+    restart: unless-stopped
+    ports:
+      - ${DOCKER_KIBANA_PORT:-6355}:5601
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+    depends_on:
+      - elasticsearch
+
+
+
+volumes:
+  phenotype_es_data:
+    driver: local
