@@ -1,7 +1,7 @@
 import requests
 
-from funcs.settings import es_url
 from funcs import paths
+from funcs.settings import es_url
 
 
 def test_elasticsearch():
@@ -13,6 +13,7 @@ def test_input_data():
     print("efo")
     efo_path = paths.data["efo"]
     assert efo_path.exists(), efo_path
+
 
 def test_input_models():
     print("scispacy lg")
