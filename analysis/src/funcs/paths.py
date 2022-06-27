@@ -12,3 +12,7 @@ data = {
     "efo": data_root / "efo-v3.43" / "efo.json",
 }
 data["artifacts"].mkdir(exist_ok=True)
+
+models = {
+    "scispacy_lg": super_proj_root / "models" / "en_core_sci_lg-0.5.0" / "en_core_sci_lg" / "en_core_sci_lg-0.5.0"
+}

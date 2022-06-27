@@ -26,6 +26,7 @@ class IndexEfoFlow(FlowSpec):
         is_flag=True,
     )
 
+
     @step
     def start(self):
         self.efo_raw_path = paths.data["efo"]
