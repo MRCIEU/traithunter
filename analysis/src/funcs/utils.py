@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 def find_project_root(anchor_file: str = "environment.yml") -> Path:
     cwd = Path.cwd()
     test_dir = cwd

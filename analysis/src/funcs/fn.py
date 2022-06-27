@@ -1,18 +1,13 @@
 import re
-import json
-from pathlib import Path
-from typing import Any, Dict, List
 from string import punctuation
+from typing import Any, Dict, List
 
 import requests
-import pandas as pd
-import janitor
-import numpy as np
-from loguru import logger
+
 
 def clean_text(text: str) -> str:
     # drop A123 like
-    pat = re.compile("[A-Z]\d+ ")
+    pat = re.compile(r"[A-Z]\d+ ")
     text = re.sub(pat, "", text)
     # drop punctuation
     for _ in punctuation:
@@ -21,9 +16,15 @@ def clean_text(text: str) -> str:
     text = text.lower()
     return text
 
+
 def search_epigraphdb_efo(text: str, limit: int = 5) -> List[Dict[str, Any]]:
     url = "https://api.epigraphdb.org/nlp/query/text"
-    params = {"text": text, "asis": True, "include_meta_nodes": ["Efo"], "limit": limit}
+    params: Dict[str, Any] = {
+        "text": text,
+        "asis": True,
+        "include_meta_nodes": ["Efo"],
+        "limit": limit,
+    }
     r = requests.get(url, params=params)
     r.raise_for_status()
     res = [
@@ -35,4 +36,3 @@ def search_epigraphdb_efo(text: str, limit: int = 5) -> List[Dict[str, Any]]:
         for _ in r.json()["results"]["results"]
     ]
     return res
-
