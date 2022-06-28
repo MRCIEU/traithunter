@@ -30,7 +30,7 @@ class EfoEncodes(pa.SchemaModel):
     primary_term: Series[bool]
 
 
-class IndexEfoFlow(FlowSpec):
+class CleanEfoFlow(FlowSpec):
 
     OVERWRITE = Parameter(
         "overwrite",
@@ -141,4 +141,4 @@ class IndexEfoFlow(FlowSpec):
 
 
 if __name__ == "__main__":
-    IndexEfoFlow()
+    CleanEfoFlow()
