@@ -27,7 +27,11 @@ def init_index(es_url: str, index_name: str, config: Dict[str, Any]) -> bool:
     url = es_url + f"/{index_name}"
     logger.info(f"Init index {index_name}")
     r = requests.put(url, json=config)
-    r.raise_for_status()
+    try:
+        r.raise_for_status()
+    except Exception as e:
+        logger.debug(r.text)
+        raise e
     return r.ok
 
 

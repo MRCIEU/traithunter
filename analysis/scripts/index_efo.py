@@ -22,12 +22,19 @@ EFO_ENTS_CONFIG = {
                     "type": "custom",
                     "tokenizer": "keyword",
                     "filter": [
+                        "sufficient_char_length",
                         "lowercase",
                         "kstem",
                     ],
                 },
             },
-            "filter": {"substring": {"type": "shingle", "output_unigrams": True}},
+            "filter": {
+                "sufficient_char_length": {
+                    "type": "length",
+                    "min": 4,
+                },
+                "substring": {"type": "shingle", "output_unigrams": True},
+            },
         }
     },
     "mappings": {
@@ -42,7 +49,7 @@ EFO_ENTS_CONFIG = {
                         "type": "text",
                         "analyzer": "exact",
                     }
-                }
+                },
             },
             "description": {
                 "type": "text",
@@ -66,12 +73,19 @@ EFO_ENCODES_CONFIG = {
                     "type": "custom",
                     "tokenizer": "keyword",
                     "filter": [
+                        "sufficient_char_length",
                         "lowercase",
                         "kstem",
                     ],
                 },
             },
-            "filter": {"substring": {"type": "shingle", "output_unigrams": True}},
+            "filter": {
+                "sufficient_char_length": {
+                    "type": "length",
+                    "min": 4,
+                },
+                "substring": {"type": "shingle", "output_unigrams": True},
+            },
         }
     },
     "mappings": {
@@ -89,7 +103,7 @@ EFO_ENCODES_CONFIG = {
                         "type": "text",
                         "analyzer": "exact",
                     }
-                }
+                },
             },
             "primary_term": {
                 "type": "boolean",
@@ -101,7 +115,7 @@ EFO_ENCODES_CONFIG = {
                 "similarity": "cosine",
             },
         }
-    }
+    },
 }
 
 
