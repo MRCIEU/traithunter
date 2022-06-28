@@ -12,9 +12,7 @@ def test_primary_term_expect_found():
 
     index_name = "efo-ents"
     url = ES_URL + f"/{index_name}/_search"
-    payload = {
-        "query": {"match": {"ent_term.raw": {"query": term, "analyzer": "substring"}}}
-    }
+    payload = {"query": {"match": {"ent_term.raw": term}}}
     r = requests.get(url, json=payload)
     r.raise_for_status()
     results = r.json()["hits"]["hits"]
@@ -28,9 +26,7 @@ def test_primary_term_expect_not_found():
 
     index_name = "efo-ents"
     url = ES_URL + f"/{index_name}/_search"
-    payload = {
-        "query": {"match": {"ent_term.raw": {"query": term, "analyzer": "substring"}}}
-    }
+    payload = {"query": {"match": {"ent_term.raw": term}}}
     r = requests.get(url, json=payload)
     r.raise_for_status()
     results = r.json()["hits"]["hits"]
@@ -44,11 +40,7 @@ def test_synonym_term_expect_found():
 
     index_name = "efo-vectors"
     url = ES_URL + f"/{index_name}/_search"
-    payload = {
-        "query": {
-            "match": {"vector_term.raw": {"query": term, "analyzer": "substring"}}
-        }
-    }
+    payload = {"query": {"match": {"vector_term.raw": term}}}
     r = requests.get(url, json=payload)
     r.raise_for_status()
     results = r.json()["hits"]["hits"]
@@ -60,11 +52,7 @@ def test_synonym_term_expect_not_found():
 
     index_name = "efo-vectors"
     url = ES_URL + f"/{index_name}/_search"
-    payload = {
-        "query": {
-            "match": {"vector_term.raw": {"query": term, "analyzer": "substring"}}
-        }
-    }
+    payload = {"query": {"match": {"vector_term.raw": term}}}
     r = requests.get(url, json=payload)
     r.raise_for_status()
     results = r.json()["hits"]["hits"]

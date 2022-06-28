@@ -48,6 +48,7 @@ EFO_ENTS_CONFIG = {
                     "raw": {
                         "type": "text",
                         "analyzer": "exact",
+                        "search_analyzer": "substring",
                     }
                 },
             },
@@ -102,6 +103,7 @@ EFO_ENCODES_CONFIG = {
                     "raw": {
                         "type": "text",
                         "analyzer": "exact",
+                        "search_analyzer": "substring",
                     }
                 },
             },
