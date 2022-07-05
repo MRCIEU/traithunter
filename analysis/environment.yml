@@ -35,3 +35,4 @@ dependencies:
     - spacy
     - pandera
     - tqdm
+    - python-levenshtein

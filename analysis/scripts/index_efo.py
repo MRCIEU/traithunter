@@ -33,7 +33,10 @@ EFO_ENTS_CONFIG = {
                     "type": "length",
                     "min": 4,
                 },
-                "substring": {"type": "shingle", "output_unigrams": True},
+                "substring": {"type": "shingle",
+                              "min_shingle_size": 2,
+                              "max_shingle_size": 4,
+                              "output_unigrams": True},
             },
         }
     },
@@ -85,7 +88,10 @@ EFO_ENCODES_CONFIG = {
                     "type": "length",
                     "min": 4,
                 },
-                "substring": {"type": "shingle", "output_unigrams": True},
+                "substring": {"type": "shingle",
+                              "min_shingle_size": 2,
+                              "max_shingle_size": 4,
+                              "output_unigrams": True},
             },
         }
     },
