@@ -1,0 +1,31 @@
+name: phenotype-api
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  # main
+  - numpy
+  - pandas
+  - requests
+  - loguru
+  - environs
+  - pydash
+  - fastapi=0.79
+  - pydantic
+  - uvicorn
+  - pytest
+  # dev utils
+  - ipython
+  - black
+  - flake8
+  - jedi
+  - isort
+  - autoflake
+  - mypy
+  - pip
+  - pip:
+    - icecream
+    - pandera==0.11
+    - hypothesis

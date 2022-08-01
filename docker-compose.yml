@@ -2,6 +2,25 @@ version: "3.4"
 
 services:
 
+  backend:
+    build:
+      context: ./
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    ports:
+      - ${DOCKER_BACKEND_PORT:-8645}:80
+    command: bash -c "make run"
+    env_file:
+      - .env
+    volumes:
+      - ./backend/:/app
+      - ./data:/data
+      - ./common_funcs:/common_funcs
+    environment:
+      - MAX_WORKERS=1
+    networks:
+      - default
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.2.3
     restart: unless-stopped
@@ -24,8 +43,6 @@ services:
       - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
     depends_on:
       - elasticsearch
-
-
 
 volumes:
   phenotype_es_data:
