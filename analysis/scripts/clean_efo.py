@@ -7,8 +7,8 @@ from metaflow import FlowSpec, Parameter, step
 from pandera.engines.numpy_engine import Object
 from pandera.typing import DataFrame, Series
 
-from funcs import paths
-from funcs.embeddings import scispacy_encode
+from analysis_funcs import paths
+from analysis_funcs.embeddings import scispacy_encode
 
 import scispacy  # noqa
 

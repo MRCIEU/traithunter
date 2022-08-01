@@ -15,6 +15,10 @@ cd analysis
 conda env create -f environment.yml
 conda activate phenotype-mapping
 python -m pip install -e .
+cd .. # back to root
+cd common_funcs
+python -m pip install -e .
+cd ...
 python -m mypy --install-types
 ```
 

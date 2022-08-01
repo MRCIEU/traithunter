@@ -1,4 +1,4 @@
-from funcs.utils import find_project_root
+from common_funcs.utils import find_project_root
 
 super_proj_root = find_project_root(anchor_file="docker-compose.yml")
 data_root = super_proj_root / "data"

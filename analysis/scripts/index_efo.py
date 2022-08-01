@@ -4,7 +4,7 @@ from typing import Any, Dict, List
 from loguru import logger
 from metaflow import FlowSpec, Parameter, step
 
-from funcs import es, paths, settings
+from analysis_funcs import es, paths, settings
 
 LOGGER_STEP = 20
 LITE_NUM = 1_000
@@ -33,10 +33,12 @@ EFO_ENTS_CONFIG = {
                     "type": "length",
                     "min": 4,
                 },
-                "substring": {"type": "shingle",
-                              "min_shingle_size": 2,
-                              "max_shingle_size": 4,
-                              "output_unigrams": True},
+                "substring": {
+                    "type": "shingle",
+                    "min_shingle_size": 2,
+                    "max_shingle_size": 4,
+                    "output_unigrams": True,
+                },
             },
         }
     },
@@ -88,10 +90,12 @@ EFO_ENCODES_CONFIG = {
                     "type": "length",
                     "min": 4,
                 },
-                "substring": {"type": "shingle",
-                              "min_shingle_size": 2,
-                              "max_shingle_size": 4,
-                              "output_unigrams": True},
+                "substring": {
+                    "type": "shingle",
+                    "min_shingle_size": 2,
+                    "max_shingle_size": 4,
+                    "output_unigrams": True,
+                },
             },
         }
     },

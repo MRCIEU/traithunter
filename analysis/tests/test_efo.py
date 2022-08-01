@@ -1,6 +1,6 @@
 import requests
 
-from funcs import settings
+from analysis_funcs import settings
 
 ES_URL = settings.es_url
 

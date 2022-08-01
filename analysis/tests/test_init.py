@@ -1,7 +1,7 @@
 import requests
 
-from funcs import paths
-from funcs.settings import es_url
+from analysis_funcs import paths
+from analysis_funcs.settings import es_url
 
 
 def test_elasticsearch():
