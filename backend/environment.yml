@@ -26,6 +26,7 @@ dependencies:
   - mypy
   - pip
   - pip:
+    - strawberry-graphql[debug-server]==0.123
     - icecream
     - pandera==0.11
     - hypothesis
