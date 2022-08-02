@@ -1,6 +1,6 @@
+import strawberry
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-import strawberry
 from strawberry.asgi import GraphQL
 
 TITLE = "Phenotype mapping"
@@ -26,6 +26,7 @@ class Query:
     @strawberry.field
     def user(self) -> User:
         return User(name="Foobar", age=20)
+
 
 schema = strawberry.Schema(query=Query)
 
