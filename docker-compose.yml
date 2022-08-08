@@ -15,6 +15,7 @@ services:
     volumes:
       - ./backend/:/app
       - ./data:/data
+      - ./models:/models
       - ./common_funcs:/common_funcs
     environment:
       - MAX_WORKERS=1

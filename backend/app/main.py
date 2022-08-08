@@ -21,5 +21,5 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 graphql_app = GraphQL(schema)
 
 app.add_route("/graphql", graphql_app)
-# app.add_websocket_route("/graphql", graphql_app)
+app.add_websocket_route("/graphql", graphql_app)
 app.include_router(utils.router, tags=["utils"])

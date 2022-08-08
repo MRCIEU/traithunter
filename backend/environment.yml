@@ -32,3 +32,6 @@ dependencies:
     - hypothesis
     - jinja2
     - types-requests
+    - websockets
+    - spacy==3.2
+    - scispacy
