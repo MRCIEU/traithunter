@@ -14,4 +14,6 @@ class EmbedTermMetadata:
 @strawberry.type(description=_docs)
 class EmbedTerm:
     metadata: EmbedTermMetadata
-    results: List[float]
+    results: List[float] = strawberry.field(
+        description="Embedding vector as a list of floats"
+    )

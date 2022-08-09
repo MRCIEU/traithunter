@@ -10,9 +10,16 @@ from .resolvers.metadata import get_metadata
 
 @strawberry.type
 class Query:
-    metadata: Metadata = strawberry.field(resolver=get_metadata)
-    embed_term: EmbedTerm = strawberry.field(resolver=embed_term_fn)
-    match_ent: MatchEnt = strawberry.field(resolver=match_ent_fn)
+    metadata: Metadata = strawberry.field(
+        resolver=get_metadata, description="Show metadata for the service"
+    )
+    embed_term: EmbedTerm = strawberry.field(
+        resolver=embed_term_fn, description="Embed (encode) query term"
+    )
+    match_ent: MatchEnt = strawberry.field(
+        resolver=match_ent_fn,
+        description="Match ontology entities by the query term",
+    )
     # TODO: list terms by ontology, paginatable
     # ontology_ent(id, exact_term, fuzzy_term, limit)
 
