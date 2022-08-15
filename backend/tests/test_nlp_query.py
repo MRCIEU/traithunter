@@ -2,7 +2,9 @@ import pydantic
 from common_funcs.common_types import VectorEntItem
 from common_funcs.es_helpers import query_vector_term
 
-from app.graphql_api.resolvers.embed_term import embed_term_fn
+from app.graphql_api.definitions.embed_term_defn import (
+    resolver as embed_term_fn,
+)
 from app.settings import ES_URL
 
 

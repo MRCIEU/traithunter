@@ -1,27 +1,26 @@
 import strawberry
 
-from .definitions.embed_term import EmbedTerm
-from .definitions.match_ent import MatchEnt
-from .definitions.metadata import Metadata
-from .resolvers.embed_term import embed_term_fn
-from .resolvers.match_ent import match_ent_fn
-from .resolvers.metadata import get_metadata
+from .definitions import embed_term_defn, match_ent_defn, metadata_defn
 
 
+# NOTES: when import types must import the specific type, not the parent module
 @strawberry.type
 class Query:
-    metadata: Metadata = strawberry.field(
-        resolver=get_metadata, description="Show metadata for the service"
+    metadata: metadata_defn.Metadata = strawberry.field(
+        resolver=metadata_defn.resolver, description=metadata_defn._docs,
     )
-    embed_term: EmbedTerm = strawberry.field(
-        resolver=embed_term_fn, description="Embed (encode) query term"
+    embed_term: embed_term_defn.EmbedTermQuery = strawberry.field(
+        resolver=embed_term_defn.resolver, description=embed_term_defn._docs,
     )
-    match_ent: MatchEnt = strawberry.field(
-        resolver=match_ent_fn,
-        description="Match ontology entities by the query term",
+    match_ent: match_ent_defn.MatchEntQuery = strawberry.field(
+        resolver=match_ent_defn.resolver, description=match_ent_defn._docs,
     )
-    # TODO: list terms by ontology, paginatable
-    # ontology_ent(id, exact_term, fuzzy_term, limit)
+    # # TODO: list terms by ontology, paginatable
+    # ontology_ent: ontology_ent.OntologyEnt = strawberry.field(
+    #     resolver=ontology_ent.resolver,
+    #     description=ontology_ent._doc
+    # )
+    # # (ent_id, ent_term, fuzzy)
 
 
 schema = strawberry.Schema(query=Query)
