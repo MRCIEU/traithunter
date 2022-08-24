@@ -26,7 +26,7 @@ export async function transformInputData(
         [b["trait_id"]]: b,
       };
       return res;
-    })
+    }, {})
     .value();
   return annotationData;
 }
