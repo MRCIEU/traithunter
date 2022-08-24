@@ -29,7 +29,7 @@ export default Vue.extend({
 
 <style scoped>
 #navbar {
-  background-color: rgba(21, 62, 62, 0.8);
+  background-color: rgba(51, 122, 183, 0.8);
   color: white;
   backdrop-filter: blur(5px);
 }
