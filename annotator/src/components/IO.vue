@@ -10,6 +10,8 @@ v-container
 <script lang="ts">
 import Vue from "vue";
 import * as io from "@/funcs/io";
+import * as types from "@/types/types";
+import * as processing from "@/funcs/processing";
 
 export default Vue.extend({
   name: "IO",
@@ -33,6 +35,13 @@ export default Vue.extend({
       return this.outputInfo != null ? this.outputInfo.name : "Unspecified";
     },
   },
+  watch: {
+    async inputData(newVal) {
+      if (newVal) {
+        this.$store.commit("annotationData/transformInputData", this.inputData);
+      }
+    },
+  },
   methods: {
     async specifyInput(): Promise<any> {
       const fileInfo = await io.getInputFile();
@@ -42,7 +51,7 @@ export default Vue.extend({
       let reader = new FileReader();
       reader.readAsText(fileInfo);
       reader.onload = () => {
-        this.inputData = JSON.parse(reader.result as string);
+        this.inputData = JSON.parse(reader.result as string) as types.InputData;
         this.inputDone = true;
       };
     },
