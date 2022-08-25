@@ -8,14 +8,15 @@ export async function transformInputData(
 ): Promise<types.AnnotationData> {
   const annotationData = _.chain(inputData)
     .map((item) => {
-      const selection = _.chain(
+      const candidates = _.chain(
         item["equivalence_res"].concat(item["composite_res"]),
       )
         .uniqBy("ent_id")
         .value();
       const res = {
         ...item,
-        selection: selection,
+        candidates: candidates,
+        selection: [],
         notes: "",
       };
       return res;
