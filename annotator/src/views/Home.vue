@@ -1,9 +1,12 @@
 <template lang="pug">
-v-container
+v-container(fluid)
   IO
   .py-5
   div(v-if="showTable")
     data-table
+    v-btn.floating-button(color="success", x-large)
+      v-icon mdi-content-save
+      | Save
 </template>
 
 <script lang="ts">
@@ -28,3 +31,12 @@ export default Vue.extend({
   methods: {},
 });
 </script>
+
+<style scoped>
+.floating-button {
+  position: fixed;
+  right: 150px;
+  bottom: 40px;
+  z-index: 120;
+}
+</style>
