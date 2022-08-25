@@ -10,11 +10,6 @@ export type VectorEntItem = {
   vector_term: string;
 };
 
-export type SelectionItem = {
-  item: VectorEntItem;
-  selected: boolean;
-};
-
 export type InputDataItem = {
   trait_id: string;
   trait_term: string;
@@ -37,7 +32,8 @@ export type AnnotationDataItem = {
   equivalence_res: Array<VectorEntItem>;
   equivalence_filter_res: Array<VectorEntItem>;
   composite_res: Array<VectorEntItem>;
-  selection: Array<SelectionItem>;
+  candidates: Array<VectorEntItem>;
+  selection: Array<string>;
   notes: string;
 };
 
