@@ -2,7 +2,11 @@
 div(v-if="itemData")
   v-card
     v-card-text
-      v-card-title {{ itemData.trait_term }}
+      v-card-title
+        span
+          span.font-weight-thin {{ idx }}
+          | &nbsp;
+          span {{ traitTerm }}
       v-expansion-panels(v-model="panelState", multiple)
         v-expansion-panel
           v-expansion-panel-header Annotation
@@ -67,6 +71,14 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    traitTerm: {
+      type: String,
+      required: true,
+    },
+    idx: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
@@ -95,8 +107,7 @@ export default Vue.extend({
     },
     candidateSelect: {
       get() {
-        return this._.chain(this.itemData.selection)
-          .value();
+        return this._.chain(this.itemData.selection).value();
       },
       async set(newVal) {
         await this.$store.dispatch("annotationData/updateCandidateSelect", {

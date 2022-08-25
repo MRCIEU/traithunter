@@ -4,11 +4,30 @@ v-container
     v-data-iterator(
       :items="dataItems",
       item-key="trait_id",
-      :items-per-page="10"
+      :items-per-page="5",
+      :search="search"
     )
+      template(v-slot:header)
+        v-toolbar.mb-1(dark, color="teal lighten-1")
+          v-row
+            v-spacer
+            v-col(cols="8")
+              v-text-field(
+                v-model="search",
+                clearable,
+                flat,
+                solo-inverted,
+                hide-details,
+                label="Search query term"
+              )
+            v-spacer
       template(v-slot:default="props")
         div(v-for="item in props.items", :key="item.trait_id")
-          item-display(:trait-id="item.trait_id")
+          item-display(
+            :idx="item.idx",
+            :trait-id="item.trait_id",
+            :trait-term="item.trait_term"
+          )
           v-divider
           .py-2
 </template>
@@ -25,6 +44,7 @@ export default Vue.extend({
   data() {
     return {
       dataItems: [],
+      search: null,
     };
   },
   computed: {
@@ -32,8 +52,8 @@ export default Vue.extend({
   },
   mounted() {
     this.dataItems = this._.chain(this.$store.state.annotationData.data)
-      .keys()
-      .map((e) => ({ trait_id: e }))
+      .map((e) => ({ trait_id: e.trait_id, trait_term: e.trait_term }))
+      .map((e, idx) => ({ idx: idx, ...e }))
       .value();
   },
   methods: {
