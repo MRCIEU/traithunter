@@ -34,6 +34,8 @@ export type AnnotationDataItem = {
   composite_res: Array<VectorEntItem>;
   candidates: Array<VectorEntItem>;
   selection: Array<string>;
+  external_selection: Array<BaseEnt>;
+  flags: Array<FlagItem>;
   notes: string;
 };
 

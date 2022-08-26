@@ -37,7 +37,6 @@ div(v-if="itemData")
               v-col(cols="4")
                 h4 Notes
                 v-subheader Insert notes for future reference
-                span TODO
                 v-textarea(
                   v-model="notes",
                   auto-grow,
@@ -49,7 +48,7 @@ div(v-if="itemData")
                 span TODO
                 h4 External picks
                 v-subheader Add external alternative picks
-                span TODO
+                external-selection(:traitId="traitId")
         v-expansion-panel
           v-expansion-panel-header Mapping results
           v-expansion-panel-content
@@ -71,6 +70,7 @@ div(v-if="itemData")
 import Vue from "vue";
 import SelectItem from "@/components/widgets/SelectItem.vue";
 import EntItem from "@/components/widgets/EntItem.vue";
+import ExternalSelection from "@/components/widgets/ExternalSelection.vue";
 import * as types from "@/types/types";
 
 export default Vue.extend({
@@ -78,6 +78,7 @@ export default Vue.extend({
   components: {
     SelectItem,
     EntItem,
+    ExternalSelection,
   },
   props: {
     traitId: {
@@ -110,24 +111,24 @@ export default Vue.extend({
       };
       return res;
     },
-    cardBg() {
+    cardBg(): string {
       const odd = "blue-grey lighten-5";
       const even = "brown lighten-5";
       const res = this.idx % 2 == 0 ? even : odd;
       return res;
     },
     candidateOptions: {
-      get() {
+      get(): Array<string> {
         return this._.chain(this.itemData.candidates)
           .map((e) => e.ent_id)
           .value();
       },
     },
     candidateSelect: {
-      get() {
+      get(): Array<string> {
         return this._.chain(this.itemData.selection).value();
       },
-      async set(newVal) {
+      async set(newVal): Promise<void> {
         await this.$store.dispatch("annotationData/updateItemProp", {
           id: this.traitId,
           prop: "selection",
@@ -136,10 +137,10 @@ export default Vue.extend({
       },
     },
     notes: {
-      get() {
+      get(): string {
         return this._.chain(this.itemData.notes).value();
       },
-      async set(newVal) {
+      async set(newVal): Promise<void> {
         await this.$store.dispatch("annotationData/updateItemProp", {
           id: this.traitId,
           prop: "notes",
@@ -147,7 +148,7 @@ export default Vue.extend({
         });
       },
     },
-    candidateInfo() {
+    candidateInfo(): any {
       return this._.chain(this.itemData.candidates)
         .reduce((a, b) => ({ ...a, [b["ent_id"]]: b }), {})
         .value();

@@ -17,6 +17,8 @@ export async function transformInputData(
         ...item,
         candidates: candidates,
         selection: [],
+        external_selection: [],
+        flags: [],
         notes: "",
       };
       return res;
