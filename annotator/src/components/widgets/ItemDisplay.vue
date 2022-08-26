@@ -1,6 +1,6 @@
 <template lang="pug">
 div(v-if="itemData")
-  v-card
+  v-card(:color="cardBg")
     v-card-text
       v-card-title
         span
@@ -20,15 +20,16 @@ div(v-if="itemData")
                 )
               v-col(cols="5")
                 h4 Candidate selection
-                v-checkbox(
-                  v-for="(id, idx) in candidateOptions",
-                  :key="idx",
-                  :label="id",
-                  :value="id",
-                  v-model="candidateSelect"
-                )
-                  template(v-slot:label)
-                    select-item(:item="candidateInfo[id]")
+                div.cand-select
+                  v-checkbox(
+                    v-for="(id, idx) in candidateOptions",
+                    :key="idx",
+                    :label="id",
+                    :value="id",
+                    v-model="candidateSelect"
+                  )
+                    template(v-slot:label)
+                      select-item(:item="candidateInfo[id]")
               v-col(cols="4")
                 h4 Notes
                 v-textarea(
@@ -98,6 +99,12 @@ export default Vue.extend({
       };
       return res;
     },
+    cardBg() {
+      const odd = "blue-grey lighten-5";
+      const even = "brown lighten-5";
+      const res = this.idx % 2 == 0 ? even : odd;
+      return res;
+    },
     candidateOptions: {
       get() {
         return this._.chain(this.itemData.candidates)
@@ -130,3 +137,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+.cand-select {
+  max-height: 750px;
+  overflow-y: scroll;
+}
+</style>
