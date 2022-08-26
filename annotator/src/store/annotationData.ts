@@ -9,7 +9,11 @@ export type AnnotationDataState = {
 };
 
 type Context = ActionContext<AnnotationDataState, State>;
-type CandidatePayload = { id: string; selection: Array<string> };
+type ItemPropPayload = {
+  id: string;
+  prop: string;
+  value: any;
+};
 
 export const annotationData = {
   namespaced: true,
@@ -26,11 +30,11 @@ export const annotationData = {
     ): Promise<void> {
       state.data = await processing.transformInputData(inputData);
     },
-    async updateCandidateSelect(
+    async updateItemProp(
       state: AnnotationDataState,
-      payload: CandidatePayload,
+      payload: ItemPropPayload,
     ): Promise<void> {
-      state.data[payload.id]["selection"] = payload.selection;
+      state.data[payload.id][payload.prop] = payload.value;
     },
   },
   actions: {
@@ -40,11 +44,11 @@ export const annotationData = {
     ): Promise<void> {
       context.commit("transformInputData", inputData);
     },
-    async updateCandidateSelect(
+    async updateItemProp(
       context: Context,
-      payload: CandidatePayload,
+      payload: ItemPropPayload,
     ): Promise<void> {
-      context.commit("updateCandidateSelect", payload);
+      context.commit("updateItemProp", payload);
     },
   },
 };

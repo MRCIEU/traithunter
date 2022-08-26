@@ -84,7 +84,6 @@ export default Vue.extend({
   data() {
     return {
       itemData: null,
-      notes: "",
       panelState: [0],
     };
   },
@@ -117,9 +116,22 @@ export default Vue.extend({
         return this._.chain(this.itemData.selection).value();
       },
       async set(newVal) {
-        await this.$store.dispatch("annotationData/updateCandidateSelect", {
+        await this.$store.dispatch("annotationData/updateItemProp", {
           id: this.traitId,
-          selection: newVal,
+          prop: "selection",
+          value: newVal,
+        });
+      },
+    },
+    notes: {
+      get() {
+        return this._.chain(this.itemData.notes).value();
+      },
+      async set(newVal) {
+        await this.$store.dispatch("annotationData/updateItemProp", {
+          id: this.traitId,
+          prop: "notes",
+          value: newVal,
         });
       },
     },
