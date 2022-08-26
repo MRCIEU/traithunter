@@ -6,11 +6,18 @@ import { State } from ".";
 
 export type AnnotationDataState = {
   data: types.AnnotationData | null;
+  metadata: types.AnnotationMetadata;
 };
 
 type Context = ActionContext<AnnotationDataState, State>;
+
 type ItemPropPayload = {
   id: string;
+  prop: string;
+  value: any;
+};
+
+type MetadataPayload = {
   prop: string;
   value: any;
 };
@@ -19,6 +26,9 @@ export const annotationData = {
   namespaced: true,
   state: (): AnnotationDataState => ({
     data: null,
+    metadata: {
+      flags: [],
+    },
   }),
   getters: {
     //
@@ -36,6 +46,12 @@ export const annotationData = {
     ): Promise<void> {
       state.data[payload.id][payload.prop] = payload.value;
     },
+    async updateMetadata(
+      state: AnnotationDataState,
+      payload: MetadataPayload,
+    ): Promise<void> {
+      state.metadata[payload.prop] = payload.value;
+    },
   },
   actions: {
     async transformInputData(
@@ -49,6 +65,12 @@ export const annotationData = {
       payload: ItemPropPayload,
     ): Promise<void> {
       context.commit("updateItemProp", payload);
+    },
+    async updateMetadata(
+      context: Context,
+      payload: MetadataPayload,
+    ): Promise<void> {
+      context.commit("updateMetadata", payload);
     },
   },
 };

@@ -43,3 +43,12 @@ export type AnnotationDataExport = Array<AnnotationDataItem>;
 export interface AnnotationData {
   [trait_id: string]: AnnotationDataItem;
 }
+
+export type FlagItem = {
+  name: string;
+  desc: string;
+};
+
+export type AnnotationMetadata = {
+  flags: Array<FlagItem>;
+};
