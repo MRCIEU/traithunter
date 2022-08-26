@@ -14,13 +14,17 @@ div(v-if="itemData")
             v-row
               v-col(cols="3")
                 h4 Basic info
+                v-subheader Basic information about the query item
                 json-viewer(
                   theme="json-viewer-gruvbox-dark",
                   :value="traitQueryInfo"
                 )
+                h4 External lookup
+                v-subheader Look up about the query item in external resources
               v-col(cols="5")
                 h4 Candidate selection
-                div.cand-select
+                v-subheader Select suitable candidates from all candidates identified in the mapping strategies
+                .cand-select
                   v-checkbox(
                     v-for="(id, idx) in candidateOptions",
                     :key="idx",
@@ -32,12 +36,20 @@ div(v-if="itemData")
                       select-item(:item="candidateInfo[id]")
               v-col(cols="4")
                 h4 Notes
+                v-subheader Insert notes for future reference
+                span TODO
                 v-textarea(
                   v-model="notes",
                   auto-grow,
                   filled,
-                  label="Insert notes for future reference (optional)"
+                  label="Insert notes for future reference"
                 )
+                h4 Flags
+                v-subheader Add flags (they need to exist in the metadata settings)
+                span TODO
+                h4 External picks
+                v-subheader Add external alternative picks
+                span TODO
         v-expansion-panel
           v-expansion-panel-header Mapping results
           v-expansion-panel-content
