@@ -46,6 +46,7 @@ div
 <script lang="ts">
 import Vue from "vue";
 import * as metadataFlags from "@/resources/metadata-flags";
+import * as types from "@/types/types";
 
 export default Vue.extend({
   name: "MetadataFlags",
@@ -72,14 +73,14 @@ export default Vue.extend({
     initItems: metadataFlags.initItems,
   }),
   computed: {
-    formTitle() {
+    formTitle(): string {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
     flagItems: {
-      get() {
+      get(): Array<types.FlagItem> {
         return this.$store.state.annotationData.metadata.flags;
       },
-      async set(newVal) {
+      async set(newVal): Promise<void> {
         await this.$store.dispatch("annotationData/updateMetadata", {
           prop: "flags",
           value: newVal,
