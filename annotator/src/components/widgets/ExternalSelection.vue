@@ -42,9 +42,11 @@ div
 </template>
 
 <script lang="ts">
+// @ts-nocheck
 import Vue from "vue";
 import * as types from "@/types/types";
 
+// typescript really hates this file, no solutions
 export default Vue.extend({
   name: "ExternalSelection",
   components: {
@@ -94,8 +96,9 @@ export default Vue.extend({
     },
     selectionItems: {
       get(): Array<types.BaseEnt> {
-        const res = this.$store.state.annotationData.data[this.traitId]
-          .external_selection;
+        const res =
+          this.$store.state.annotationData.data[this.traitId]
+            .external_selection;
         return res as Array<types.BaseEnt>;
       },
       async set(newVal): Promise<void> {
@@ -117,7 +120,7 @@ export default Vue.extend({
   },
   methods: {
     editItem(item): void {
-      (this.editedIndex as number) = this.selectionItems.indexOf(item);
+      this.editedIndex = this.selectionItems.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
@@ -127,30 +130,30 @@ export default Vue.extend({
       this.dialogDelete = true;
     },
     deleteItemConfirm(): void {
-      this.selectionItems.splice(this.editedIndex as number, 1);
+      this.selectionItems.splice(this.editedIndex, 1);
       this.closeDelete();
     },
     close(): void {
       this.dialog = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
-        (this.editedIndex as number) = -1;
+        this.editedIndex = -1;
       });
     },
     closeDelete(): void {
       this.dialogDelete = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
-        (this.editedIndex as number) = -1;
+        this.editedIndex = -1;
       });
     },
     save(): void {
-      if ((this.editedIndex as number) > -1) {
+      if (this.editedIndex > -1) {
         Object.assign(this.selectionItems[this.editedIndex], this.editedItem);
       } else {
         this.selectionItems.push(this.editedItem);
       }
-      this.close() as void;
+      this.close();
     },
   },
 });

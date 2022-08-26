@@ -101,7 +101,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    traitQueryInfo() {
+    traitQueryInfo(): any {
       const res = {
         trait_id: this.itemData.trait_id,
         trait_term: this.itemData.trait_term,
