@@ -21,6 +21,7 @@ div(v-if="itemData")
                 )
                 h4 External lookup
                 v-subheader Look up about the query item in external resources
+                external-lookup(:traitTerm="traitTerm")
               v-col(cols="5")
                 h4 Candidate selection
                 v-subheader Select suitable candidates from all candidates identified in the mapping strategies
@@ -45,7 +46,27 @@ div(v-if="itemData")
                 )
                 h4 Flags
                 v-subheader Add flags (they need to exist in the metadata settings)
-                span TODO
+                v-combobox(
+                  v-model="flagSelect",
+                  :items="flagItems",
+                  chips,
+                  clearable,
+                  label="flags",
+                  multiple,
+                  preprend-icon="mdi-filter-variant",
+                  solor
+                )
+                  template(
+                    v-slot:selection="{ attrs, item, select, selected }"
+                  )
+                    v-chip(
+                      v-bind="attrs",
+                      :input-value="selected",
+                      close,
+                      @click="select",
+                      @click:close="flagRemove(item)"
+                    )
+                      span {{ item }} &nbsp;
                 h4 External picks
                 v-subheader Add external alternative picks
                 external-selection(:traitId="traitId")
@@ -71,6 +92,7 @@ import Vue from "vue";
 import SelectItem from "@/components/widgets/SelectItem.vue";
 import EntItem from "@/components/widgets/EntItem.vue";
 import ExternalSelection from "@/components/widgets/ExternalSelection.vue";
+import ExternalLookup from "@/components/widgets/ExternalLookup.vue";
 import * as types from "@/types/types";
 
 export default Vue.extend({
@@ -79,6 +101,7 @@ export default Vue.extend({
     SelectItem,
     EntItem,
     ExternalSelection,
+    ExternalLookup,
   },
   props: {
     traitId: {
@@ -140,7 +163,7 @@ export default Vue.extend({
       get(): string {
         return this._.chain(this.itemData.notes).value();
       },
-      async set(newVal): Promise<void> {
+      async set(newVal: string) {
         await this.$store.dispatch("annotationData/updateItemProp", {
           id: this.traitId,
           prop: "notes",
@@ -153,12 +176,37 @@ export default Vue.extend({
         .reduce((a, b) => ({ ...a, [b["ent_id"]]: b }), {})
         .value();
     },
+    flagItems(): Array<string> {
+      const flags = this.$store.state.annotationData.metadata.flags;
+      const res = this._.chain(flags)
+        .map((e) => e.name)
+        .value() as Array<string>;
+      return res;
+    },
+    flagSelect: {
+      get(): Array<string> {
+        const flags = this.$store.state.annotationData.data[this.traitId].flags;
+        return flags as Array<string>;
+      },
+      async set(newVal: Array<string>) {
+        await this.$store.dispatch("annotationData/updateItemProp", {
+          id: this.traitId,
+          prop: "flags",
+          value: newVal,
+        });
+      },
+    },
   },
   mounted() {
     this.itemData = this.$store.state.annotationData.data[this.traitId];
   },
   methods: {
-    //
+    flagRemove(item) {
+      (this as any).flagSelect.splice(
+        (this as any).flagSelect.indexOf(item),
+        1,
+      );
+    },
   },
 });
 </script>

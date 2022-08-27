@@ -4,13 +4,11 @@ div
     template(v-slot:top)
       v-toolbar(flat)
         v-toolbar-title External picks
-        span.mx-4
-        span.font-weight-thin Add/edit ontology items from external sources
         v-divider.mx-4(inset, vertical)
         v-spacer
         v-dialog(v-model="dialog", max-width="500px")
           template(v-slot:activator="{ on, attrs }")
-            v-btn.mb-2(color="primary", dark, v-bind="attrs", v-on="on") New Item
+            v-btn.mb-2(color="primary", dark, v-bind="attrs", v-on="on", small) New Item
           v-card
             v-card-title
               span.text-h5 {{ formTitle }}
@@ -42,7 +40,6 @@ div
 </template>
 
 <script lang="ts">
-// @ts-nocheck
 import Vue from "vue";
 import * as types from "@/types/types";
 
@@ -101,7 +98,7 @@ export default Vue.extend({
             .external_selection;
         return res as Array<types.BaseEnt>;
       },
-      async set(newVal): Promise<void> {
+      async set(newVal: any): Promise<void> {
         await this.$store.dispatch("annotationData/updateItemProp", {
           id: this.traitId,
           prop: "external_selection",
