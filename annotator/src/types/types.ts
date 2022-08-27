@@ -40,7 +40,10 @@ export type AnnotationDataItem = {
 };
 
 export type InputData = Array<InputDataItem>;
-export type AnnotationDataExport = Array<AnnotationDataItem>;
+export type AnnotationDataExport = {
+  metadata: AnnotationMetadata;
+  data: AnnotationData;
+};
 
 export interface AnnotationData {
   [trait_id: string]: AnnotationDataItem;

@@ -1,3 +1,6 @@
+import * as types from "@/types/types";
+type FileHandle = any;
+
 export async function getInputFile(): Promise<any> {
   const pickerOpts = {
     types: [
@@ -29,4 +32,13 @@ export async function getOutputFile(): Promise<any> {
     ],
   };
   return await window.showSaveFilePicker(pickerOpts);
+}
+
+export async function save(
+  outputFile: FileHandle,
+  data: types.AnnotationDataExport,
+): Promise<any> {
+  const writableStream = await outputFile.createWritable();
+  await writableStream.write(JSON.stringify(data));
+  await writableStream.close();
 }
