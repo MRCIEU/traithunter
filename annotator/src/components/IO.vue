@@ -1,10 +1,16 @@
 <template lang="pug">
 v-container
-  v-btn(@click="specifyInput", :disabled="inputDone") Specify Input file
-  | &nbsp; Input file: {{ inputName }}
+  v-row
+    v-col(cols="6")
+      v-btn(@click="specifyInput", :disabled="inputDone") Specify Input file
+      | &nbsp; Input file: {{ inputName }}
   div
-  v-btn(@click="specifyOutput", :disabled="outputDone") Specify output file
-  | &nbsp; Output file: {{ outputName }}
+  v-row
+    v-col(cols="6")
+      v-btn(@click="specifyOutput", :disabled="outputDone") Specify output file
+      | &nbsp; Output file: {{ outputName }}
+    v-col(cols="4")
+      span Progress saved at: {{ lastSaveTime }}
 </template>
 
 <script lang="ts">
@@ -20,19 +26,36 @@ export default Vue.extend({
   },
   data() {
     return {
-      inputInfo: null,
-      outputInfo: null,
       inputDone: false,
       outputDone: false,
       inputData: null,
     };
   },
   computed: {
+    inputInfo: {
+      get(): File {
+        return this.$store.state.io.input;
+      },
+      async set(info: File) {
+        await this.$store.dispatch("io/updateInput", info);
+      },
+    },
+    outputInfo: {
+      get(): File {
+        return this.$store.state.io.output;
+      },
+      async set(info: File) {
+        await this.$store.dispatch("io/updateOutput", info);
+      },
+    },
     inputName(): string {
       return this.inputInfo != null ? this.inputInfo.name : "Unspecified";
     },
     outputName(): string {
       return this.outputInfo != null ? this.outputInfo.name : "Unspecified";
+    },
+    lastSaveTime(): string {
+      return this.$store.state.io.saveTime;
     },
   },
   watch: {
