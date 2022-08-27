@@ -80,7 +80,7 @@ export default Vue.extend({
       get(): Array<types.FlagItem> {
         return this.$store.state.annotationData.metadata.flags;
       },
-      async set(newVal): Promise<void> {
+      async set(newVal: any): Promise<void> {
         await this.$store.dispatch("annotationData/updateMetadata", {
           prop: "flags",
           value: newVal,
