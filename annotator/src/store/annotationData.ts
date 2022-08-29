@@ -31,12 +31,26 @@ export const annotationData = {
     },
   }),
   getters: {
-    //
+    annotationDataExport(
+      state: AnnotationDataState,
+    ): types.AnnotationDataExport {
+      const res = {
+        metadata: state.metadata,
+        data: state.data,
+      };
+      return res;
+    },
   },
   mutations: {
     async transformInputData(
       state: AnnotationDataState,
-      inputData: types.InputData,
+      {
+        inputData,
+        inputType,
+      }: {
+        inputData: types.InputData;
+        inputType: string;
+      },
     ): Promise<void> {
       state.data = await processing.transformInputData(inputData);
     },

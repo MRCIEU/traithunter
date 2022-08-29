@@ -8,7 +8,8 @@ type FileHandle = any;
 export type IoState = {
   input: File;
   output: FileHandle;
-  saveTime: string;
+  initDone: boolean;
+  saveTime: string | null;
 };
 
 type Context = ActionContext<IoState, State>;
@@ -18,7 +19,8 @@ export const io = {
   state: (): IoState => ({
     input: null,
     output: null,
-    saveTime: "Progress has not been saved!",
+    initDone: false,
+    saveTime: null,
   }),
   getters: {
     //
@@ -33,6 +35,9 @@ export const io = {
     async updateSaveTime(state: IoState, time: string): Promise<void> {
       state.saveTime = time;
     },
+    async initDone(state: IoState): Promise<void> {
+      state.initDone = true;
+    },
   },
   actions: {
     async updateInput(context: Context, info: File): Promise<void> {
@@ -43,6 +48,9 @@ export const io = {
     },
     async updateSaveTime(context: Context, time: string): Promise<void> {
       context.commit("updateSaveTime", time);
+    },
+    async initDone(context: Context): Promise<void> {
+      context.commit("initDone");
     },
   },
 };
