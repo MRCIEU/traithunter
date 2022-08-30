@@ -1,5 +1,10 @@
 <template lang="pug">
-v-tooltip(v-bind:[position]="true", max-width="400px")
+v-tooltip(
+  v-bind:[position]="true",
+  max-width="400px",
+  :nudge-top="nudgeTop",
+  :nudge-bottom="nudgeBottom"
+)
   template(v-slot:activator="{ on, attrs }")
     span.tooltip-span(v-if="showUnderline", v-bind="attrs", v-on="on")
       slot
@@ -25,6 +30,14 @@ export default Vue.extend({
     position: {
       type: String,
       default: "bottom",
+    },
+    nudgeTop: {
+      type: Number,
+      default: 0,
+    },
+    nudgeBottom: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
