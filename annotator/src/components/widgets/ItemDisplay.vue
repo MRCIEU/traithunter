@@ -17,7 +17,8 @@ div(v-if="itemData")
                 v-subheader Basic information about the query item
                 json-viewer(
                   theme="json-viewer-gruvbox-dark",
-                  :value="traitQueryInfo"
+                  :value="traitQueryInfo",
+                  :expand-depth="3"
                 )
                 h4 External lookup
                 v-subheader Look up about the query item in external resources
@@ -129,8 +130,7 @@ export default Vue.extend({
         trait_id: this.itemData.trait_id,
         trait_term: this.itemData.trait_term,
         trait_term_query: this.itemData.trait_term_query,
-        phenotype: this.itemData.phenotype,
-        dataset: this.itemData.dataset,
+        trait_basic_info: this.itemData.trait_basic_info,
       };
       return res;
     },
