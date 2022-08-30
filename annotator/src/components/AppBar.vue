@@ -1,10 +1,16 @@
 <template lang="pug">
 v-app-bar#navbar(app, dense, flat)
   v-toolbar-title
-    tooltip(:docs="`Back to the main page`", :show-underline="false")
-      v-btn(href="/", text, dark)
+    div(v-if="!isMain")
+      tooltip(:docs="`Back to the main page`", :show-underline="false")
+        v-btn(href="/", text, dark)
+          span.ml-3 {{ appTitle }}
+    div(v-else)
       span.ml-3 {{ appTitle }}
-  span.px-1
+  span.px-5
+  tooltip(:docs="`Documentation`", :show-underline="false")
+    v-btn(href="/docs", text, dark, target="_blank")
+      span Docs
   v-spacer
   v-sheet(color="transparent")
     .py-2
@@ -22,6 +28,9 @@ export default Vue.extend({
   computed: {
     currentRouteName() {
       return this.$route.name;
+    },
+    isMain() {
+      return this.currentRouteName == "Main";
     },
   },
 });

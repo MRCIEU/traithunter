@@ -36,7 +36,7 @@ export type AnnotationDataItem = {
   candidates: Array<VectorEntItem>;
   selection: Array<string>;
   external_selection: Array<BaseEnt>;
-  flags: Array<FlagItem>;
+  flags: Array<string>;
   notes: string;
 };
 
