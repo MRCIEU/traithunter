@@ -7,13 +7,23 @@ v-container
     v-expansion-panel
       v-expansion-panel-header
         h1
-          span File settings
+          span File settings & operations
           | &nbsp;
           | &nbsp;
           | &nbsp;
           | &nbsp;
       v-expansion-panel-content
         file-settings
+        v-divider
+        div.py-3(v-if="initDone")
+          v-btn.mx-2(color="success", x-large, @click="save")
+            v-icon mdi-content-save
+            | &nbsp;
+            tooltip(:docs="docs.btnSave") Save
+          v-btn.mx-2(color="info", x-large)
+            v-icon mdi-export-variant
+            | &nbsp;
+            tooltip(:docs="docs.btnExport") Export flat file
     .py-5
     v-expansion-panel(v-if="initDone")
       v-expansion-panel-header
@@ -30,7 +40,8 @@ v-container
     div(v-if="initDone")
       v-btn.floating-button(color="success", x-large, @click="save")
         v-icon mdi-content-save
-        | Save
+        | &nbsp;
+        tooltip(:docs="docs.btnSave", position="top") Save
 </template>
 
 <script lang="ts">
@@ -39,6 +50,7 @@ import FileSettings from "@/components/FileSettings.vue";
 import DataTable from "@/components/DataTable.vue";
 import Metadata from "@/components/Metadata.vue";
 import GettingStarted from "@/components/GettingStarted.vue";
+import * as docs from "@/resources/docs";
 import * as io from "@/funcs/io";
 import * as types from "@/types/types";
 
@@ -53,6 +65,7 @@ export default Vue.extend({
   data() {
     return {
       panelState: [0],
+      docs: docs,
     };
   },
   computed: {
