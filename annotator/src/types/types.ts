@@ -61,3 +61,13 @@ export type AnnotationMetadata = {
 };
 
 export type InputData = MappingResultsInput | AnnotationDataExport;
+
+export type FlatExportItem = {
+  trait_id: string;
+  trait_term: string;
+  selection: Array<BaseEnt>;
+  external_selection: Array<BaseEnt>;
+  flags: Array<string>;
+  notes: string;
+};
+export type FlatExportData = Array<FlatExportItem>;
