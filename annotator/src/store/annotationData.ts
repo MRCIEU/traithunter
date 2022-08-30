@@ -52,7 +52,16 @@ export const annotationData = {
         inputType: string;
       },
     ): Promise<void> {
-      state.data = await processing.transformInputData(inputData);
+      const transformRes = await processing.transformInputData({
+        inputData: inputData,
+        inputType: inputType,
+      });
+      if (inputType == "mapping-results") {
+        state.data = transformRes.data;
+      } else if (inputType == "annotation-results") {
+        state.data = transformRes.data;
+        state.metadata = transformRes.metadata;
+      }
     },
     async updateItemProp(
       state: AnnotationDataState,

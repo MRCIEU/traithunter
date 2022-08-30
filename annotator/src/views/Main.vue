@@ -15,7 +15,7 @@ v-container
       v-expansion-panel-content
         file-settings
         v-divider
-        div.py-3(v-if="initDone")
+        .py-3(v-if="initDone")
           v-btn.mx-2(color="success", x-large, @click="save")
             v-icon mdi-content-save
             | &nbsp;

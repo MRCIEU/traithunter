@@ -10,7 +10,7 @@ export type VectorEntItem = {
   vector_term: string;
 };
 
-export type InputDataItem = {
+export type MappingResultsInputItem = {
   trait_id: string;
   trait_term: string;
   trait_term_query: Array<string>;
@@ -26,11 +26,12 @@ export type AnnotationDataItem = {
   trait_id: string;
   trait_term: string;
   trait_term_query: Array<string>;
-  phenotype: string;
-  trait_type: string;
-  dataset: string;
+  trait_basic_info: {
+    phenotype: string;
+    trait_type: string;
+    dataset: string;
+  };
   equivalence_res: Array<VectorEntItem>;
-  equivalence_filter_res: Array<VectorEntItem>;
   composite_res: Array<VectorEntItem>;
   candidates: Array<VectorEntItem>;
   selection: Array<string>;
@@ -39,9 +40,10 @@ export type AnnotationDataItem = {
   notes: string;
 };
 
-export type InputData = Array<InputDataItem>;
+export type MappingResultsInput = Array<MappingResultsInputItem>;
+
 export type AnnotationDataExport = {
-  metadata: AnnotationMetadata;
+  metadata: AnnotationMetadata | null;
   data: AnnotationData;
 };
 
@@ -57,3 +59,5 @@ export type FlagItem = {
 export type AnnotationMetadata = {
   flags: Array<FlagItem>;
 };
+
+export type InputData = MappingResultsInput | AnnotationDataExport;
