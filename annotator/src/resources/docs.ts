@@ -7,7 +7,8 @@ For detailed documentation please consult the
 <a href="/docs" target="_blank">Documentation</a>
 page.
 
-Remember to save your progress regularly.
+This is currently a very **alpha-stage** software.
+Please keep regular backups, and remember to save your progress regularly.
 `;
 
 export const inputConfig = `
@@ -23,7 +24,11 @@ export const inputConfig = `
 `;
 
 export const btnSave = "Save your progress";
-export const btnExport = "Export a flat JSON file from the annotation data";
+export const btnExport = `
+Export a simplified and flattened JSON file from the annotation data that is easier to be imported for further analysis
+
+**NOTE**: the flat file is a simplified snapshot of the main annotation results file, and therefore not its substitute.
+`;
 
 export const docsAbout = `
 ## Annotator for phenotype harmonization

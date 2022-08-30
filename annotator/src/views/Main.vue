@@ -21,7 +21,7 @@ v-container
               v-icon mdi-content-save
               | &nbsp;
               span Save
-          v-btn.mx-2(color="info", x-large)
+          v-btn.mx-2(color="info", x-large, @click="flatDataExport")
             tooltip(:docs="docs.btnExport", :nudge-bottom="20")
               v-icon mdi-export-variant
               | &nbsp;
@@ -93,6 +93,26 @@ export default Vue.extend({
       await io.save(outputFile, exportData);
       const lastSaveTime = new Date().toLocaleString();
       await this.$store.dispatch("io/updateSaveTime", lastSaveTime);
+    },
+    async flatDataExport(): Promise<void> {
+      const pickerOpts = {
+        suggestedName: "annotation_results_flat.json",
+        types: [
+          {
+            description: "JSON file",
+            accept: {
+              "application/*": [".json"],
+            },
+          },
+        ],
+      };
+      const outputFile = await window.showSaveFilePicker(pickerOpts);
+      const exportData = await this.$store.getters[
+        "annotationData/flatDataExport"
+      ];
+      const writableStream = await outputFile.createWritable();
+      await writableStream.write(JSON.stringify(exportData));
+      await writableStream.close();
     },
   },
 });

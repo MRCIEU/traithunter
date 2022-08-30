@@ -40,6 +40,12 @@ export const annotationData = {
       };
       return res;
     },
+    async flatDataExport(
+      state: AnnotationDataState,
+    ): Promise<types.FlatExportData> {
+      const res = await processing.transformFlatExportData(state.data);
+      return res;
+    },
   },
   mutations: {
     async transformInputData(
