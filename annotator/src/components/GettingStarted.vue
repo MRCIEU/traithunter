@@ -1,17 +1,11 @@
 <template lang="pug">
 div
-  p
-    span First specify the input file and its filetype, &nbsp;
-    | then specify the output file to save. &nbsp;
-    | For detailed documentation please consult the &nbsp;
-    a(href="/docs", target="_blank") Documentation
-    | &nbsp; page.
-  p
-    span Remeber to save your progress regularly.
+  vue-markdown(:source="docs.gettingStarted", :breaks="false")
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import * as docs from "@/resources/docs";
 
 export default Vue.extend({
   name: "GettingStarted",
@@ -20,7 +14,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      //
+      docs: docs,
     };
   },
   computed: {

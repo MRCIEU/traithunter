@@ -3,18 +3,22 @@ v-container
   v-stepper(v-model="stage", vertical, v-if="!initDone")
     v-stepper-step(:complete="stage > 1", step="1") Configure input
     v-stepper-content(step="1")
-      div
-        v-btn(@click="specifyInput") Specify Input file
-        | &nbsp; Input file: {{ inputName }}
-        .py-5
-        span Specify input type
-        v-radio-group(v-model="inputType", row)
-          v-radio(
-            v-for="(item, idx) in _.chain(inputTypeOptions).values().value()",
-            :key="idx",
-            :label="item.label",
-            :value="item.value"
-          )
+      v-row
+        v-col(cols="6")
+          div
+            v-btn(@click="specifyInput") Specify Input file
+            | &nbsp; Input file: {{ inputName }}
+            .py-5
+            span Specify input type
+            v-radio-group(v-model="inputType", row)
+              v-radio(
+                v-for="(item, idx) in _.chain(inputTypeOptions).values().value()",
+                :key="idx",
+                :label="item.label",
+                :value="item.value"
+              )
+        v-col(cols="6")
+          vue-markdown(:source="docs.inputConfig", :breaks="false")
       v-btn(color="primary", @click="finishStage1", :disabled="!inputDone") Continue
     v-stepper-step(:complete="stage > 2", step="2") Configure output
     v-stepper-content(step="2")
@@ -41,6 +45,7 @@ import Vue from "vue";
 import * as io from "@/funcs/io";
 import * as types from "@/types/types";
 import * as processing from "@/funcs/processing";
+import * as docs from "@/resources/docs";
 
 export default Vue.extend({
   name: "FileSettings",
@@ -62,6 +67,7 @@ export default Vue.extend({
           value: "annotation-results",
         },
       },
+      docs: docs,
     };
   },
   computed: {
