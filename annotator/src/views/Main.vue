@@ -17,13 +17,15 @@ v-container
         v-divider
         .py-3(v-if="initDone")
           v-btn.mx-2(color="success", x-large, @click="save")
-            v-icon mdi-content-save
-            | &nbsp;
-            tooltip(:docs="docs.btnSave") Save
+            tooltip(:docs="docs.btnSave", :nudge-bottom="20")
+              v-icon mdi-content-save
+              | &nbsp;
+              span Save
           v-btn.mx-2(color="info", x-large)
-            v-icon mdi-export-variant
-            | &nbsp;
-            tooltip(:docs="docs.btnExport") Export flat file
+            tooltip(:docs="docs.btnExport", :nudge-bottom="20")
+              v-icon mdi-export-variant
+              | &nbsp;
+              span Export flat file
     .py-5
     v-expansion-panel(v-if="initDone")
       v-expansion-panel-header
@@ -39,9 +41,10 @@ v-container
           data-table
     div(v-if="initDone")
       v-btn.floating-button(color="success", x-large, @click="save")
-        v-icon mdi-content-save
-        | &nbsp;
-        tooltip(:docs="docs.btnSave", position="top") Save
+        tooltip(:docs="docs.btnSave", position="top", :nudge-top="20")
+          v-icon mdi-content-save
+          | &nbsp;
+          span Save
 </template>
 
 <script lang="ts">
