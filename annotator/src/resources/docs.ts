@@ -23,6 +23,14 @@ export const inputConfig = `
     You should use this if you are loading from an earlier save file.
 `;
 
+export const outputConfig = `
+# Output configuration
+
+- **output file**:
+  Specify the location in the filesystem to save the annotation results to.
+  **NOTE**: *if you save the file to an existing location it will REPLACE the existing file*.
+`;
+
 export const btnSave = "Save your progress";
 export const btnExport = `
 Export a simplified and flattened JSON file from the annotation data that is easier to be imported for further analysis
@@ -38,28 +46,76 @@ This is a companion app for annotating phenotype mapping / harmonization results
 
 export const docsBasicUsage = ``;
 
-export const docsFileFormat = `
+export const docsTechSpecs = `
+## Overview
+
+TODO: overview desc
+
+TODO: Vector entity
+
+## File format
+
+Below are specifications of the file format in the syntax of typescript.
+
+### Structure of the mapping results
+
+### Structure of the annotation results format
 
 \`\`\`
-AnnotationDataItem = {
-  trait_id: string;
-  trait_term: string;
-  trait_term_query: Array<string>;
-  trait_basic_info: {
-    phenotype: string;
-    trait_type: string;
-    dataset: string;
-  };
-  equivalence_res: Array<VectorEntItem>;
-  composite_res: Array<VectorEntItem>;
-  candidates: Array<VectorEntItem>;
-  selection: Array<string>;
-  external_selection: Array<BaseEnt>;
-  flags: Array<FlagItem>;
-  notes: string;
+AnnotationDataExport = {                      # The annotation results file contains a metadata field and a data field
+  metadata: AnnotationMetadata
+  data: AnnotationData;
+};
+
+AnnotationData {                              # AnnotationData is an object (dictionary) where for one item the key is a \`trait_id\` and the value is a \`AnnotationDataItem\` (see below)
+  [trait_id: string]: AnnotationDataItem;
 }
+
+AnnotationDataItem = {                        # This is the structure of the individual query item
+  trait_id: string;                           # Identifier of the trait
+  trait_term: string;                         # Term label of the trait
+  trait_term_query: Array<string>;            # A list of actual term queries of the trait
+  trait_basic_info: {                         # Other basic information regarding the trait, nested into one field.
+    phenotype: string;                        #
+    trait_type: string;                       #
+    dataset: string;                          #
+  };                                          #
+  equivalence_res: Array<VectorEnt>;          # Mapping results from equivalence mapping strategy
+  composite_res: Array<VectorEnt>;            # Mapping results from composite mapping strategy
+  candidates: Array<VectorEnt>;               # Candidates merged from \`equivalence_res\` and \`composite_res\`
+  selection: Array<string>;                   # Selected candidates in the form of \`trait_id\` strings
+  external_selection: Array<BaseEnt>;         # Manually added candidates from external sources if results from \`candidates\` are not satisfactory
+  flags: Array<string>;                       # Flags on this query item
+  notes: string;                              # Notes on this query item
+}
+
+AnnotationMetadata = {                        # This is the metadata field for the annotation results
+  flags: Array<FlagItem>;                     # Flags where each has a name field a a description field
+};
+\`\`\`
+
+### Structure of the flattened results
+
+TODO
+
+### Common object format
+
+\`\`\`
+export type BaseEnt = {                       # This is the basic building block of an "entity" which must have an identifier and a label
+  ent_id: string;
+  ent_term: string;
+};
+
+export type VectorEnt = {                     # A vector entity is the entity in the vector store
+  ent_id: string;                             #
+  ent_term: string;                           #
+  vector_term: string;                        # This is the term label of the embeded vector
+  primary_term: boolean;                      # Whether the \`vector_term\` is the embedded term
+};
 \`\`\`
 
 `;
 
-export const MappingStrategies = ``;
+export const MappingStrategies = `
+TODO
+`;

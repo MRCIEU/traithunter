@@ -3,7 +3,7 @@ export type BaseEnt = {
   ent_term: string;
 };
 
-export type VectorEntItem = {
+export type VectorEnt = {
   ent_id: string;
   ent_term: string;
   primary_term: boolean;
@@ -17,9 +17,9 @@ export type MappingResultsInputItem = {
   phenotype: string;
   trait_type: string;
   dataset: string;
-  equivalence_res: Array<VectorEntItem>;
-  equivalence_filter_res: Array<VectorEntItem>;
-  composite_res: Array<VectorEntItem>;
+  equivalence_res: Array<VectorEnt>;
+  equivalence_filter_res: Array<VectorEnt>;
+  composite_res: Array<VectorEnt>;
 };
 
 export type AnnotationDataItem = {
@@ -31,9 +31,9 @@ export type AnnotationDataItem = {
     trait_type: string;
     dataset: string;
   };
-  equivalence_res: Array<VectorEntItem>;
-  composite_res: Array<VectorEntItem>;
-  candidates: Array<VectorEntItem>;
+  equivalence_res: Array<VectorEnt>;
+  composite_res: Array<VectorEnt>;
+  candidates: Array<VectorEnt>;
   selection: Array<string>;
   external_selection: Array<BaseEnt>;
   flags: Array<string>;
