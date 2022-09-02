@@ -16,15 +16,16 @@ v-container
       vue-markdown(:source="docs.docsTechSpecs", :breaks="false")
   v-divider
   v-card.py-5
-    v-card-title Mapping strategies
+    v-card-title Types
     v-card-text
-      vue-markdown(:source="docs.docsMappingStrategies", :breaks="false")
+      vue-markdown(:source="typeSource", :breaks="false")
   v-divider
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import * as docs from "@/resources/docs";
+import typeRaw from "!!raw-loader!@/types/types";
 
 export default Vue.extend({
   name: "Docs",
@@ -34,10 +35,18 @@ export default Vue.extend({
   data() {
     return {
       docs: docs,
+      typeRaw: typeRaw,
     };
   },
   computed: {
-    //
+    typeSource(): string {
+      const res = `
+\`\`\`
+${this.typeRaw}
+\`\`\`
+      `;
+      return res;
+    },
   },
   methods: {
     //
