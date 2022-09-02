@@ -53,25 +53,29 @@ TODO: overview desc
 
 TODO: Vector entity
 
-## File format
+TODO: annotation results and flattened results
 
-Below are specifications of the file format in the syntax of typescript.
+## Mapping strategies
+
+## File format and object structure
+
+Below are specifications of the file format in the syntax of typescript types.
 
 ### Structure of the mapping results
 
 ### Structure of the annotation results format
 
 \`\`\`
-AnnotationDataExport = {                      # The annotation results file contains a metadata field and a data field
+type AnnotationDataExport = {                 # The annotation results file contains a metadata field and a data field
   metadata: AnnotationMetadata
   data: AnnotationData;
 };
 
-AnnotationData {                              # AnnotationData is an object (dictionary) where for one item the key is a \`trait_id\` and the value is a \`AnnotationDataItem\` (see below)
+type AnnotationData {                         # AnnotationData is an object (dictionary) where for one item the key is a \`trait_id\` and the value is a \`AnnotationDataItem\` (see below)
   [trait_id: string]: AnnotationDataItem;
 }
 
-AnnotationDataItem = {                        # This is the structure of the individual query item
+type AnnotationDataItem = {                   # This is the structure of the individual query item
   trait_id: string;                           # Identifier of the trait
   trait_term: string;                         # Term label of the trait
   trait_term_query: Array<string>;            # A list of actual term queries of the trait
@@ -89,24 +93,33 @@ AnnotationDataItem = {                        # This is the structure of the ind
   notes: string;                              # Notes on this query item
 }
 
-AnnotationMetadata = {                        # This is the metadata field for the annotation results
+type AnnotationMetadata = {                   # This is the metadata field for the annotation results
   flags: Array<FlagItem>;                     # Flags where each has a name field a a description field
 };
 \`\`\`
 
 ### Structure of the flattened results
 
-TODO
+type FlatExportData = Array<FlatExportItem>;  #
+
+type FlatExportItem = {                       #
+  trait_id: string;                           #
+  trait_term: string;                         #
+  selection: Array<BaseEnt>;                  #
+  external_selection: Array<BaseEnt>;         #
+  flags: Array<string>;                       #
+  notes: string;                              #
+};
 
 ### Common object format
 
 \`\`\`
-export type BaseEnt = {                       # This is the basic building block of an "entity" which must have an identifier and a label
+type BaseEnt = {                              # This is the basic building block of an "entity" which must have an identifier and a label
   ent_id: string;
   ent_term: string;
 };
 
-export type VectorEnt = {                     # A vector entity is the entity in the vector store
+type VectorEnt = {                            # A vector entity is the entity in the vector store
   ent_id: string;                             #
   ent_term: string;                           #
   vector_term: string;                        # This is the term label of the embeded vector

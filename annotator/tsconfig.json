@@ -15,6 +15,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
+      "raw-loader.d.ts",
       "webpack-env"
     ],
     "paths": {
