@@ -26,7 +26,7 @@ export default Vue.extend({
   },
   props: {
     item: {
-      type: Object as PropType<types.VectorEntItem>,
+      type: Object as PropType<types.VectorEnt>,
       required: true,
     },
   },

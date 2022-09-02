@@ -1,5 +1,5 @@
 <template lang="pug">
-v-container
+v-container(fluid)
   div(v-if="dataItems != null")
     v-data-iterator(
       :items="dataItems",

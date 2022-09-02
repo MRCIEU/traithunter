@@ -1,5 +1,5 @@
 <template lang="pug">
-v-container
+v-container(fluid)
   v-stepper(v-model="stage", vertical, v-if="!initDone")
     v-stepper-step(:complete="stage > 1", step="1") Configure input
     v-stepper-content(step="1")
@@ -22,15 +22,19 @@ v-container
       v-btn(color="primary", @click="finishStage1", :disabled="!inputDone") Continue
     v-stepper-step(:complete="stage > 2", step="2") Configure output
     v-stepper-content(step="2")
-      div
-        v-btn(@click="specifyOutput", :disabled="outputDone") Specify output file
-        | &nbsp; Output file: {{ outputName }}
-      .py-5
-      v-btn(
-        color="primary",
-        @click="finishStage2",
-        :disabled="!outputDone || initDone"
-      ) Initialize session
+      v-row
+        v-col(cols="6")
+          div
+            v-btn(@click="specifyOutput", :disabled="outputDone") Specify output file
+            | &nbsp; Output file: {{ outputName }}
+          .py-5
+          v-btn(
+            color="primary",
+            @click="finishStage2",
+            :disabled="!outputDone || initDone"
+          ) Initialize session
+        v-col(cols="6")
+          vue-markdown(:source="docs.outputConfig", :breaks="false")
   div(v-if="initDone")
     h2 Input settings
     p Input file: {{ inputName }}

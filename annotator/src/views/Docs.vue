@@ -11,9 +11,9 @@ v-container
       vue-markdown(:source="docs.docsBasicUsage", :breaks="false")
   v-divider
   v-card.py-5
-    v-card-title File format
+    v-card-title Technical specifications
     v-card-text
-      vue-markdown(:source="docs.docsFileFormat", :breaks="false")
+      vue-markdown(:source="docs.docsTechSpecs", :breaks="false")
   v-divider
   v-card.py-5
     v-card-title Mapping strategies
