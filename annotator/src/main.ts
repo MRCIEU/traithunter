@@ -10,6 +10,9 @@ import VueLodash from "vue-lodash";
 import lodash from "lodash";
 Vue.use(VueLodash, { name: "custom", lodash: lodash });
 
+import "prismjs";
+import "prismjs/themes/prism.css";
+
 import "@/plugins/general.css";
 
 import VueMarkdown from "@adapttive/vue-markdown";
