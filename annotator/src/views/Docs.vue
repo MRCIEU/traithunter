@@ -18,7 +18,8 @@ v-container
   v-card.py-5
     v-card-title Types
     v-card-text
-      vue-markdown(:source="typeSource", :breaks="false")
+      vue-markdown(:source="docs.docsTypes", :breaks="false")
+      prism(language="typescript", :code="typeRaw")
   v-divider
 </template>
 
@@ -26,11 +27,13 @@ v-container
 import Vue from "vue";
 import * as docs from "@/resources/docs";
 import typeRaw from "!!raw-loader!@/types/types";
+import Prism from "vue-prism-component";
+import "prismjs/components/prism-typescript";
 
 export default Vue.extend({
   name: "Docs",
   components: {
-    //
+    Prism,
   },
   data() {
     return {
@@ -39,14 +42,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    typeSource(): string {
-      const res = `
-\`\`\`
-${this.typeRaw}
-\`\`\`
-      `;
-      return res;
-    },
+    //
   },
   methods: {
     //
