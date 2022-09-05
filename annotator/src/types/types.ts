@@ -113,6 +113,8 @@ export type InputData = MappingResultsInput | AnnotationDataExport;
 // Flattened results
 
 export type FlatExportItem = {
+  // `FlatExportItem` takes a selection of item fields from `AnnotationDataItem`
+  // and performs basic transformation on them if necessary.
   trait_id: string;
   trait_term: string;
   selection: Array<BaseEnt>;
