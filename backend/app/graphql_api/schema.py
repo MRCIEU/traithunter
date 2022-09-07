@@ -1,6 +1,11 @@
 import strawberry
 
-from .definitions import embed_term_defn, match_ent_defn, metadata_defn
+from .definitions import (
+    embed_term_defn,
+    match_ent_defn,
+    metadata_defn,
+    ontology_ent_defn,
+)
 
 
 # NOTES: when import types must import the specific type, not the parent module
@@ -15,12 +20,10 @@ class Query:
     match_ent: match_ent_defn.MatchEntQuery = strawberry.field(
         resolver=match_ent_defn.resolver, description=match_ent_defn._docs,
     )
-    # # TODO: list terms by ontology, paginatable
-    # ontology_ent: ontology_ent.OntologyEnt = strawberry.field(
-    #     resolver=ontology_ent.resolver,
-    #     description=ontology_ent._doc
-    # )
-    # # (ent_id, ent_term, fuzzy)
+    ontology_ent: ontology_ent_defn.OntologyEntQuery = strawberry.field(
+        resolver=ontology_ent_defn.resolver,
+        description=ontology_ent_defn._docs,
+    )
 
 
 schema = strawberry.Schema(query=Query)
