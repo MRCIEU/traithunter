@@ -6,6 +6,7 @@ v-container
         v-card-title About
         v-card-text
           vue-markdown(:source="docs.docsAbout", :breaks="false")
+          vue-markdown(:source="docs.docsChangelog", :breaks="false")
       v-divider
       v-card.py-5
         v-card-title Basic usage

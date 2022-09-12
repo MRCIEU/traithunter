@@ -41,7 +41,7 @@ Export a simplified and flattened JSON file from the annotation data that is eas
 export const docsAbout = `
 ## Annotator for phenotype harmonization
 
-This is a companion app for annotating phenotype mapping / harmonization results produced by the \`phenotype mapper\`.
+This is a companion app for annotating phenotype mapping / harmonization results produced by the \`phenotype mapper\` (the main app is unreleased yet).
 `;
 
 export const docsBasicUsage = `
@@ -84,4 +84,12 @@ Further documentation (such as parameters on the retrieval of results) will be a
 export const docsTypes = `
 You will find below the about how major objects (e.g. structure for an output file) are
 defined / declared, in typescript typing syntax.
+`;
+
+export const docsChangelog = `
+## Changelog
+
+**2022-09-12, version 0.1.0**
+
+This is the pilot release of the annotator app.
 `;
