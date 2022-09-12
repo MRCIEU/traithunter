@@ -14,9 +14,9 @@ install:
 lint:
 	npm run lint
 
-## ==== running the frontend ====
+## ==== running app ====
 
-## Starting the frontend vue app
+## Starting the app
 run:
 	npm run serve
 

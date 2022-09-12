@@ -7,6 +7,7 @@ v-app-bar#navbar(app, dense, flat)
           span.ml-3 {{ appTitle }}
     div(v-else)
       span.ml-3 {{ appTitle }}
+  span.ml-2.font-weight-light v{{ version }}
   span.px-5
   tooltip(:docs="`Documentation`", :show-underline="false")
     v-btn(href="/docs", text, dark, target="_blank")
@@ -20,10 +21,13 @@ v-app-bar#navbar(app, dense, flat)
 
 <script lang="ts">
 import Vue from "vue";
+import { VERSION } from "@/config";
+
 export default Vue.extend({
   name: "AppBar",
   data: () => ({
     appTitle: "Ontology harmonization annotator",
+    version: VERSION,
   }),
   computed: {
     currentRouteName() {
