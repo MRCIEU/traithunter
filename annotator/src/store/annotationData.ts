@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 import * as types from "@/types/types";
 import * as processing from "@/funcs/processing";
 
@@ -44,6 +46,12 @@ export const annotationData = {
       state: AnnotationDataState,
     ): Promise<types.FlatExportData> {
       const res = await processing.transformFlatExportData(state.data);
+      return res;
+    },
+    async annotationDataArray(
+      state: AnnotationDataState,
+    ): Promise<types.AnnotationDataItem> {
+      const res = await _.chain(state.data).values().value();
       return res;
     },
   },

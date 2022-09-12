@@ -46,7 +46,7 @@ div(v-if="itemData")
                   label="Insert notes for future reference"
                 )
                 h4 Flags
-                v-subheader Add flags (they need to exist in the metadata settings)
+                v-subheader Add flags (they first need to exist in the metadata settings, and anything unregistered will be discarded)
                 v-combobox(
                   v-model="flagSelect",
                   :items="flagItems",
@@ -189,10 +189,13 @@ export default Vue.extend({
         return flags as Array<string>;
       },
       async set(newVal: Array<string>) {
+        const flags = this._.chain(newVal)
+          .filter((e) => this.flagItems.includes(e))
+          .value();
         await this.$store.dispatch("annotationData/updateItemProp", {
           id: this.traitId,
           prop: "flags",
-          value: newVal,
+          value: flags,
         });
       },
     },
