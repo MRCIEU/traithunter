@@ -22,6 +22,27 @@ services:
     networks:
       - default
 
+  annotator-dev:
+    # NOTE: this needs https to work for file operations, so need to tunnel
+    #       to local machine
+    build:
+      context: ./annotator
+      dockerfile: ${PWD}/utils/Dockerfile-dev
+    restart: unless-stopped
+    command: "tail -f /dev/null"
+    volumes:
+      - ./annotator/:/app/
+    ports:
+      - ${DOCKER_ANNOTATOR_PORT:-8643}:8080
+
+  annotator:
+    build:
+      context: ./annotator
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - ${DOCKER_ANNOTATOR_PORT:-8642}:8080
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.2.3
     restart: unless-stopped

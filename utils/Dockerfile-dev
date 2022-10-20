@@ -1,0 +1,11 @@
+# -*- mode: dockerfile -*-
+FROM node:12.4.0-alpine
+RUN apk add --no-cache git make ncurses gawk
+WORKDIR /app
+ENV NODE_ENV=development
+# COPY package*.json ./
+# RUN npm install
+# # Fix watch file size limit on remote server
+# ENV CHOKIDAR_USEPOLLING=1
+# ENV PATH /app/node_modules/.bin:$PATH
+# CMD ["npm", "run", "serve"]
