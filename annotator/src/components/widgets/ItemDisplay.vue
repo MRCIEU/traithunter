@@ -35,7 +35,7 @@ div(v-if="itemData")
                     v-model="candidateSelect"
                   )
                     template(v-slot:label)
-                      select-item(:item="candidateInfo[id]")
+                      select-item(:item="candidateInfo[id]", :trait-id="traitId")
               v-col(cols="4")
                 h4 Notes
                 v-subheader Insert notes for future reference
@@ -45,7 +45,7 @@ div(v-if="itemData")
                   filled,
                   label="Insert notes for future reference"
                 )
-                h4 Flags
+                h4 Flags for this query item
                 v-subheader Add flags (they first need to exist in the metadata settings, and anything unregistered will be discarded)
                 v-combobox(
                   v-model="flagSelect",

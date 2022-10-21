@@ -32,9 +32,10 @@ export async function transformInputData({
 export async function transformInputDataFromAnnotationResults(
   inputData: types.AnnotationDataExport,
 ): Promise<types.AnnotationDataExport> {
+  const data = inputData.data;
   const res = {
     metadata: inputData.metadata,
-    data: inputData.data,
+    data: data,
   };
   return res;
 }
@@ -61,11 +62,16 @@ export async function transformInputDataFromMappingResults(
       )
         .uniqBy("ent_id")
         .value();
+      const cand_flags = _.chain(candidates).map((e) => (e.ent_id)).reduce((a, b) => ({
+        ...a, [b]: []
+      }), {})
+      .value();
       const res = {
         ...convertedItem,
         candidates: candidates,
         selection: [],
         external_selection: [],
+        cand_flags: cand_flags,
         flags: [],
         notes: "",
       };

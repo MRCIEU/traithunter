@@ -90,8 +90,13 @@ export type AnnotationDataItem = {
   // Picks from external source, if the candidates from mapping results
   // are not satisfactory
   external_selection: Array<BaseEnt>;
-  // Flag names
+  // Flag names for query item flags
   flags: Array<string>;
+  // flags for candidates
+  cand_flags: {
+    [ent_id: string]: Array<string>;
+  };
+  // Notes
   notes: string;
 };
 

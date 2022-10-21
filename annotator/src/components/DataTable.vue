@@ -15,9 +15,9 @@ v-container(fluid)
             v-model="predSelect"
           )
       v-col(cols="6")
-        h3 Flag filter
+        h3 Flag filter for query items
         v-subheader When enabled, will show items that contain ANY of the included flags (they first need to exist in the metadata settings)
-        v-checkbox(label="Enable flag filter", v-model="useFlagFilter")
+        v-checkbox(label="Enable flag filter", v-model="useFlagFilterCands")
         v-combobox(
           v-model="flagSelect",
           :items="flagItems",
@@ -37,6 +37,10 @@ v-container(fluid)
               @click:close="flagRemove(item)"
             )
               span {{ item }} &nbsp;
+        h3 Flag filter for mapping candidate items
+        v-subheader When enabled, will show items that contain ANY of the included flags (they first need to exist in the metadata settings)
+        v-checkbox(label="Enable flag filter", v-model="useFlagFilterItems")
+        span TODO: candidate flag filters
     v-btn(color="primary", x-large, @click="updateFilter") Update filter
     .py-2
       span Current number of items: {{ dataItemsSimple.length }}
@@ -95,7 +99,8 @@ export default Vue.extend({
       preds: preds,
       dataItems: [],
       predSelect: [],
-      useFlagFilter: false,
+      useFlagFilterCands: false,
+      useFlagFilterItems: false,
       flagSelect: [],
     };
   },
@@ -142,7 +147,7 @@ export default Vue.extend({
       const pred = this._.overEvery(this.predFuncs);
       let res = this._.chain(origItems).filter(pred).value();
       console.log(res.length);
-      if (this.useFlagFilter) {
+      if (this.useFlagFilterCands) {
         res = this._.chain(res)
           .filter((e) => {
             const good = this._.some(this.flagSelect, (flag) =>

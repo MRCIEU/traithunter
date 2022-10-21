@@ -24,6 +24,12 @@ type MetadataPayload = {
   value: any;
 };
 
+type ItemFlagsPayload = {
+  traitId: string;
+  entId: string;
+  value: Array<string>;
+}
+
 export const annotationData = {
   namespaced: true,
   state: (): AnnotationDataState => ({
@@ -83,6 +89,12 @@ export const annotationData = {
     ): Promise<void> {
       state.data[payload.id][payload.prop] = payload.value;
     },
+    async updateItemCandFlags(
+      state: AnnotationDataState,
+      payload: ItemFlagsPayload,
+    ): Promise<void> {
+      state.data[payload.traitId]["cand_flags"] = payload.value;
+    },
     async updateMetadata(
       state: AnnotationDataState,
       payload: MetadataPayload,
@@ -102,6 +114,12 @@ export const annotationData = {
       payload: ItemPropPayload,
     ): Promise<void> {
       context.commit("updateItemProp", payload);
+    },
+    async updateItemCandFlags(
+      context: Context,
+      payload: ItemFlagsPayload,
+    ): Promise<void> {
+      context.commit("updateItemCandFlags", payload);
     },
     async updateMetadata(
       context: Context,
