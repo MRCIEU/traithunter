@@ -28,7 +28,7 @@ type ItemFlagsPayload = {
   traitId: string;
   entId: string;
   value: Array<string>;
-}
+};
 
 export const annotationData = {
   namespaced: true,
@@ -93,7 +93,7 @@ export const annotationData = {
       state: AnnotationDataState,
       payload: ItemFlagsPayload,
     ): Promise<void> {
-      state.data[payload.traitId]["cand_flags"] = payload.value;
+      state.data[payload.traitId]["cand_flags"][payload.entId] = payload.value;
     },
     async updateMetadata(
       state: AnnotationDataState,

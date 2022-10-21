@@ -22,9 +22,7 @@ div
       preprend-icon="mdi-filter-variant",
       solor
     )
-      template(
-        v-slot:selection="{ attrs, item, select, selected }"
-      )
+      template(v-slot:selection="{ attrs, item, select, selected }")
         v-chip(
           v-bind="attrs",
           :input-value="selected",
@@ -51,9 +49,9 @@ export default Vue.extend({
       required: true,
     },
     traitId: {
-      type: string,
+      type: String,
       required: true,
-    }
+    },
   },
   data() {
     return {
@@ -70,7 +68,10 @@ export default Vue.extend({
     },
     flagSelect: {
       get(): Array<string> {
-        const flags = this.$store.state.annotationData.data[this.traitId].cand_flags[this.item.ent_id];
+        const flags =
+          this.$store.state.annotationData.data[this.traitId].cand_flags[
+            this.item.ent_id
+          ];
         return flags as Array<string>;
       },
       async set(newVal: Array<string>) {
@@ -91,7 +92,7 @@ export default Vue.extend({
         (this as any).flagSelect.indexOf(item),
         1,
       );
-    }
+    },
   },
 });
 </script>

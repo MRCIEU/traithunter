@@ -62,10 +62,16 @@ export async function transformInputDataFromMappingResults(
       )
         .uniqBy("ent_id")
         .value();
-      const cand_flags = _.chain(candidates).map((e) => (e.ent_id)).reduce((a, b) => ({
-        ...a, [b]: []
-      }), {})
-      .value();
+      const cand_flags = _.chain(candidates)
+        .map((e) => e.ent_id)
+        .reduce(
+          (a, b) => ({
+            ...a,
+            [b]: [],
+          }),
+          {},
+        )
+        .value();
       const res = {
         ...convertedItem,
         candidates: candidates,

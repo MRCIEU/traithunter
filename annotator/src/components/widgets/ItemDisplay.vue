@@ -35,7 +35,10 @@ div(v-if="itemData")
                     v-model="candidateSelect"
                   )
                     template(v-slot:label)
-                      select-item(:item="candidateInfo[id]", :trait-id="traitId")
+                      select-item(
+                        :item="candidateInfo[id]",
+                        :trait-id="traitId"
+                      )
               v-col(cols="4")
                 h4 Notes
                 v-subheader Insert notes for future reference
