@@ -27,18 +27,23 @@ div(v-if="itemData")
                 h4 Candidate selection
                 v-subheader Select suitable candidates from all candidates identified in the mapping strategies
                 .cand-select
-                  v-checkbox(
-                    v-for="(id, idx) in candidateOptions",
-                    :key="idx",
-                    :label="id",
-                    :value="id",
-                    v-model="candidateSelect"
-                  )
-                    template(v-slot:label)
-                      select-item(
-                        :item="candidateInfo[id]",
-                        :trait-id="traitId"
-                      )
+                  div(v-for="(id, idx) in candidateOptions", :key="idx")
+                    span Candidate {{ idx }}
+                    v-checkbox(
+                      :label="id",
+                      :value="id",
+                      v-model="candidateSelect"
+                    )
+                      template(v-slot:label)
+                        select-item(
+                          :item="candidateInfo[id]",
+                          :trait-id="traitId"
+                        )
+                    cand-flags.ml-5.pl-5(
+                      :trait-id="traitId",
+                      :ent-id="id"
+                    )
+                    v-divider
               v-col(cols="4")
                 h4 Notes
                 v-subheader Insert notes for future reference
@@ -94,6 +99,7 @@ div(v-if="itemData")
 <script lang="ts">
 import Vue from "vue";
 import SelectItem from "@/components/widgets/SelectItem.vue";
+import CandFlags from "@/components/widgets/CandFlags.vue";
 import EntItem from "@/components/widgets/EntItem.vue";
 import ExternalSelection from "@/components/widgets/ExternalSelection.vue";
 import ExternalLookup from "@/components/widgets/ExternalLookup.vue";
@@ -103,6 +109,7 @@ export default Vue.extend({
   name: "ItemDisplay",
   components: {
     SelectItem,
+    CandFlags,
     EntItem,
     ExternalSelection,
     ExternalLookup,
