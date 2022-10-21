@@ -5,7 +5,7 @@ v-container(fluid)
     v-row
       v-col(cols="6")
         h3 Predefined filters
-        v-subheader Will show items that satisfy ALL of the predicates
+        v-subheader Will show items that satisfies ALL of the predicates
         div(style="overflow-y: scroll; max-height: 500px")
           v-checkbox(
             v-for="(item, idx) in preds",
@@ -15,18 +15,20 @@ v-container(fluid)
             v-model="predSelect"
           )
       v-col(cols="6")
-        h3 Flag filter
-        v-subheader When enabled, will show items that contain ANY of the included flags (they first need to exist in the metadata settings)
-        v-checkbox(label="Enable flag filter", v-model="useFlagFilter")
+        h3 Flag filter for query traits
+        v-subheader When enabled, will show query traits that contain ANY of the included flags (they first need to exist in the metadata settings)
+        v-checkbox(
+          label="Enable query item flag filter",
+          v-model="useTraitFlagFilter"
+        )
         v-combobox(
-          v-model="flagSelect",
+          v-model="traitFlagSelect",
           :items="flagItems",
           chips,
           clearable,
           label="flags",
           multiple,
-          preprend-icon="mdi-filter-variant",
-          solor
+          preprend-icon="mdi-filter-variant"
         )
           template(v-slot:selection="{ attrs, item, select, selected }")
             v-chip(
@@ -34,7 +36,31 @@ v-container(fluid)
               :input-value="selected",
               close,
               @click="select",
-              @click:close="flagRemove(item)"
+              @click:close="traitFlagRemove(item)"
+            )
+              span {{ item }} &nbsp;
+        h3 Flag filter for mapping candidate items
+        v-subheader When enabled, will show query items that contain ANY of the included flags for the mapping candidates (they first need to exist in the metadata settings)
+        v-checkbox(
+          label="Enable candidate flag filter",
+          v-model="useCandFlagFilter"
+        )
+        v-combobox(
+          v-model="candFlagSelect",
+          :items="flagItems",
+          chips,
+          clearable,
+          label="flags",
+          multiple,
+          preprend-icon="mdi-filter-variant"
+        )
+          template(v-slot:selection="{ attrs, item, select, selected }")
+            v-chip(
+              v-bind="attrs",
+              :input-value="selected",
+              close,
+              @click="select",
+              @click:close="candFlagRemove(item)"
             )
               span {{ item }} &nbsp;
     v-btn(color="primary", x-large, @click="updateFilter") Update filter
@@ -95,8 +121,10 @@ export default Vue.extend({
       preds: preds,
       dataItems: [],
       predSelect: [],
-      useFlagFilter: false,
-      flagSelect: [],
+      useTraitFlagFilter: false,
+      useCandFlagFilter: false,
+      traitFlagSelect: [],
+      candFlagSelect: [],
     };
   },
   computed: {
@@ -129,9 +157,15 @@ export default Vue.extend({
     ];
   },
   methods: {
-    flagRemove(item) {
-      (this as any).flagSelect.splice(
-        (this as any).flagSelect.indexOf(item),
+    traitFlagRemove(item) {
+      (this as any).traitFlagSelect.splice(
+        (this as any).traitFlagSelect.indexOf(item),
+        1,
+      );
+    },
+    candFlagRemove(item) {
+      (this as any).candFlagSelect.splice(
+        (this as any).candFlagSelect.indexOf(item),
         1,
       );
     },
@@ -142,16 +176,31 @@ export default Vue.extend({
       const pred = this._.overEvery(this.predFuncs);
       let res = this._.chain(origItems).filter(pred).value();
       console.log(res.length);
-      if (this.useFlagFilter) {
+      if (this.useTraitFlagFilter) {
         res = this._.chain(res)
           .filter((e) => {
-            const good = this._.some(this.flagSelect, (flag) =>
-              e.flags.includes(flag),
+            const good = this._.some(this.traitFlagSelect, (flag) =>
+              e.trait_flags.includes(flag),
             );
             return good;
           })
           .value();
         console.log(res.length);
+      }
+      if (this.useCandFlagFilter) {
+        res = this._.chain(res)
+          .filter((e) => {
+            const good = this._.some(this.candFlagSelect, (flag) => {
+              const candFlags = this._.chain(e.cand_flags)
+                .values()
+                .flatten()
+                .uniq()
+                .value();
+              return candFlags.includes(flag);
+            });
+            return good;
+          })
+          .value();
       }
       this.dataItems = res;
     },

@@ -27,6 +27,10 @@ export default Vue.extend({
       type: Object as PropType<types.VectorEnt>,
       required: true,
     },
+    traitId: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {

@@ -90,8 +90,13 @@ export type AnnotationDataItem = {
   // Picks from external source, if the candidates from mapping results
   // are not satisfactory
   external_selection: Array<BaseEnt>;
-  // Flag names
-  flags: Array<string>;
+  // Flag names for query item flags
+  trait_flags: Array<string>;
+  // flags for candidates
+  cand_flags: {
+    [ent_id: string]: Array<string>;
+  };
+  // Notes
   notes: string;
 };
 
@@ -119,7 +124,7 @@ export type FlatExportItem = {
   trait_term: string;
   selection: Array<BaseEnt>;
   external_selection: Array<BaseEnt>;
-  flags: Array<string>;
+  trait_flags: Array<string>;
   notes: string;
 };
 

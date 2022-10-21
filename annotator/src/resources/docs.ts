@@ -89,6 +89,11 @@ defined / declared, in typescript typing syntax.
 export const docsChangelog = `
 ## Changelog
 
+**Dev**
+
+- Introduced flags for mapping candidates
+- Flags for query traits are now called \`trait_flags\` to distinguish from \`cand_flags\` (flags for mapping candidates)
+
 **2022-09-12, version 0.1.0**
 
 This is the pilot release of the annotator app.

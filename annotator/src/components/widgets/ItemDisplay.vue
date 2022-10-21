@@ -6,13 +6,15 @@ div(v-if="itemData")
         span
           span.font-weight-thin {{ idx }}
           | &nbsp;
+          span {{ traitId }}:
+          | &nbsp;
           span {{ traitTerm }}
       v-expansion-panels(v-model="panelState", multiple)
         v-expansion-panel
-          v-expansion-panel-header Annotation
+          v-expansion-panel-header Basic information about the query item
           v-expansion-panel-content
             v-row
-              v-col(cols="3")
+              v-col(cols="5")
                 h4 Basic info
                 v-subheader Basic information about the query item
                 json-viewer(
@@ -20,22 +22,32 @@ div(v-if="itemData")
                   :value="traitQueryInfo",
                   :expand-depth="3"
                 )
+              v-col
                 h4 External lookup
                 v-subheader Look up about the query item in external resources
                 external-lookup(:traitTerm="traitTerm")
-              v-col(cols="5")
+        v-expansion-panel
+          v-expansion-panel-header Annotation of mapping results
+          v-expansion-panel-content
+            v-row
+              v-col(cols="7")
                 h4 Candidate selection
                 v-subheader Select suitable candidates from all candidates identified in the mapping strategies
                 .cand-select
-                  v-checkbox(
-                    v-for="(id, idx) in candidateOptions",
-                    :key="idx",
-                    :label="id",
-                    :value="id",
-                    v-model="candidateSelect"
-                  )
-                    template(v-slot:label)
-                      select-item(:item="candidateInfo[id]")
+                  div(v-for="(id, idx) in candidateOptions", :key="idx")
+                    span Candidate {{ idx }}
+                    v-checkbox(
+                      :label="id",
+                      :value="id",
+                      v-model="candidateSelect"
+                    )
+                      template(v-slot:label)
+                        select-item(
+                          :item="candidateInfo[id]",
+                          :trait-id="traitId"
+                        )
+                    cand-flags.ml-5.pl-5(:trait-id="traitId", :ent-id="id")
+                    v-divider
               v-col(cols="4")
                 h4 Notes
                 v-subheader Insert notes for future reference
@@ -45,7 +57,7 @@ div(v-if="itemData")
                   filled,
                   label="Insert notes for future reference"
                 )
-                h4 Flags
+                h4 Flags for this query trait
                 v-subheader Add flags (they first need to exist in the metadata settings, and anything unregistered will be discarded)
                 v-combobox(
                   v-model="flagSelect",
@@ -54,8 +66,7 @@ div(v-if="itemData")
                   clearable,
                   label="flags",
                   multiple,
-                  preprend-icon="mdi-filter-variant",
-                  solor
+                  preprend-icon="mdi-filter-variant"
                 )
                   template(
                     v-slot:selection="{ attrs, item, select, selected }"
@@ -91,6 +102,7 @@ div(v-if="itemData")
 <script lang="ts">
 import Vue from "vue";
 import SelectItem from "@/components/widgets/SelectItem.vue";
+import CandFlags from "@/components/widgets/CandFlags.vue";
 import EntItem from "@/components/widgets/EntItem.vue";
 import ExternalSelection from "@/components/widgets/ExternalSelection.vue";
 import ExternalLookup from "@/components/widgets/ExternalLookup.vue";
@@ -100,6 +112,7 @@ export default Vue.extend({
   name: "ItemDisplay",
   components: {
     SelectItem,
+    CandFlags,
     EntItem,
     ExternalSelection,
     ExternalLookup,
@@ -121,7 +134,7 @@ export default Vue.extend({
   data() {
     return {
       itemData: null,
-      panelState: [0],
+      panelState: [1],
     };
   },
   computed: {
@@ -185,7 +198,8 @@ export default Vue.extend({
     },
     flagSelect: {
       get(): Array<string> {
-        const flags = this.$store.state.annotationData.data[this.traitId].flags;
+        const flags =
+          this.$store.state.annotationData.data[this.traitId].trait_flags;
         return flags as Array<string>;
       },
       async set(newVal: Array<string>) {
@@ -194,7 +208,7 @@ export default Vue.extend({
           .value();
         await this.$store.dispatch("annotationData/updateItemProp", {
           id: this.traitId,
-          prop: "flags",
+          prop: "trait_flags",
           value: flags,
         });
       },
