@@ -6,13 +6,15 @@ div(v-if="itemData")
         span
           span.font-weight-thin {{ idx }}
           | &nbsp;
+          span {{ traitId }}:
+          | &nbsp;
           span {{ traitTerm }}
       v-expansion-panels(v-model="panelState", multiple)
         v-expansion-panel
-          v-expansion-panel-header Annotation
+          v-expansion-panel-header Basic information about the query item
           v-expansion-panel-content
             v-row
-              v-col(cols="3")
+              v-col(cols="5")
                 h4 Basic info
                 v-subheader Basic information about the query item
                 json-viewer(
@@ -20,10 +22,15 @@ div(v-if="itemData")
                   :value="traitQueryInfo",
                   :expand-depth="3"
                 )
+              v-col
                 h4 External lookup
                 v-subheader Look up about the query item in external resources
                 external-lookup(:traitTerm="traitTerm")
-              v-col(cols="5")
+        v-expansion-panel
+          v-expansion-panel-header Annotation of mapping results
+          v-expansion-panel-content
+            v-row
+              v-col(cols="7")
                 h4 Candidate selection
                 v-subheader Select suitable candidates from all candidates identified in the mapping strategies
                 .cand-select
@@ -39,10 +46,7 @@ div(v-if="itemData")
                           :item="candidateInfo[id]",
                           :trait-id="traitId"
                         )
-                    cand-flags.ml-5.pl-5(
-                      :trait-id="traitId",
-                      :ent-id="id"
-                    )
+                    cand-flags.ml-5.pl-5(:trait-id="traitId", :ent-id="id")
                     v-divider
               v-col(cols="4")
                 h4 Notes
@@ -131,7 +135,7 @@ export default Vue.extend({
   data() {
     return {
       itemData: null,
-      panelState: [0],
+      panelState: [1],
     };
   },
   computed: {
