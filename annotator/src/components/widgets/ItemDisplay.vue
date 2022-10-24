@@ -67,7 +67,6 @@ div(v-if="itemData")
                   label="flags",
                   multiple,
                   preprend-icon="mdi-filter-variant",
-                  solor
                 )
                   template(
                     v-slot:selection="{ attrs, item, select, selected }"
