@@ -66,7 +66,7 @@ div(v-if="itemData")
                   clearable,
                   label="flags",
                   multiple,
-                  preprend-icon="mdi-filter-variant",
+                  preprend-icon="mdi-filter-variant"
                 )
                   template(
                     v-slot:selection="{ attrs, item, select, selected }"

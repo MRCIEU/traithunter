@@ -17,7 +17,10 @@ v-container(fluid)
       v-col(cols="6")
         h3 Flag filter for query items
         v-subheader When enabled, will show query items that contain ANY of the included flags (they first need to exist in the metadata settings)
-        v-checkbox(label="Enable query item flag filter", v-model="useQueryFlagFilter")
+        v-checkbox(
+          label="Enable query item flag filter",
+          v-model="useQueryFlagFilter"
+        )
         v-combobox(
           v-model="queryFlagSelect",
           :items="flagItems",
@@ -25,7 +28,7 @@ v-container(fluid)
           clearable,
           label="flags",
           multiple,
-          preprend-icon="mdi-filter-variant",
+          preprend-icon="mdi-filter-variant"
         )
           template(v-slot:selection="{ attrs, item, select, selected }")
             v-chip(
@@ -38,7 +41,10 @@ v-container(fluid)
               span {{ item }} &nbsp;
         h3 Flag filter for mapping candidate items
         v-subheader When enabled, will show query items that contain ANY of the included flags for the mapping candidates (they first need to exist in the metadata settings)
-        v-checkbox(label="Enable candidate flag filter", v-model="useCandFlagFilter")
+        v-checkbox(
+          label="Enable candidate flag filter",
+          v-model="useCandFlagFilter"
+        )
         v-combobox(
           v-model="candFlagSelect",
           :items="flagItems",
@@ -46,7 +52,7 @@ v-container(fluid)
           clearable,
           label="flags",
           multiple,
-          preprend-icon="mdi-filter-variant",
+          preprend-icon="mdi-filter-variant"
         )
           template(v-slot:selection="{ attrs, item, select, selected }")
             v-chip(
@@ -183,12 +189,18 @@ export default Vue.extend({
       }
       if (this.useCandFlagFilter) {
         res = this._.chain(res)
-        .filter((e) => {
-          const good = this._.some(this.candFlagSelect, (flag) => {
-            const candFlags = this._.chain(e.cand_flags).values().flatten().uniq().value();
-            return candFlags.includes(flag);
+          .filter((e) => {
+            const good = this._.some(this.candFlagSelect, (flag) => {
+              const candFlags = this._.chain(e.cand_flags)
+                .values()
+                .flatten()
+                .uniq()
+                .value();
+              return candFlags.includes(flag);
+            });
+            return good;
           })
-        })
+          .value();
       }
       this.dataItems = res;
     },
