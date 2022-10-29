@@ -129,7 +129,7 @@ export default Vue.extend({
       this.stage = 2;
     },
     async finishStage2(): Promise<void> {
-      await this.$store.commit("annotationData/transformInputData", {
+      await this.$store.commit("annotationData/initInput", {
         inputData: this.inputData,
         inputType: this.inputType,
       });

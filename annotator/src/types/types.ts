@@ -71,13 +71,9 @@ export type AnnotationDataItem = {
   trait_id: string;
   trait_term: string;
   trait_term_query: Array<string>;
-  trait_basic_info: {
-    // Data availability inside `trait_basic_info` is subjected to
-    // the source data
-    phenotype: string;
-    trait_type: string;
-    dataset: string;
-  };
+  // Data availability inside `trait_basic_info` is subjected to
+  // the source data
+  trait_basic_info: Recod<string, unknown>;
   // Mapping results from equivalence mapping strategy
   equivalence_res: Array<VectorEnt>;
   // Mapping results from composite mapping strategy

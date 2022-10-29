@@ -2,6 +2,7 @@ import _ from "lodash";
 
 import * as types from "@/types/types";
 import * as processing from "@/funcs/processing";
+import * as initInput from "@/funcs/init-input";
 
 import { ActionContext } from "vuex";
 import { State } from ".";
@@ -51,7 +52,7 @@ export const annotationData = {
     async flatDataExport(
       state: AnnotationDataState,
     ): Promise<types.FlatExportData> {
-      const res = await processing.transformFlatExportData(state.data);
+      const res = await processing.flatDataExport(state.data);
       return res;
     },
     async annotationDataArray(
@@ -62,7 +63,7 @@ export const annotationData = {
     },
   },
   mutations: {
-    async transformInputData(
+    async initInput(
       state: AnnotationDataState,
       {
         inputData,
@@ -72,7 +73,7 @@ export const annotationData = {
         inputType: string;
       },
     ): Promise<void> {
-      const transformRes = await processing.transformInputData({
+      const transformRes = await initInput.initInput({
         inputData: inputData,
         inputType: inputType,
       });
