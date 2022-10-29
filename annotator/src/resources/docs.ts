@@ -44,7 +44,13 @@ export const docsAbout = `
 This is a companion app for annotating phenotype mapping / harmonization results produced by the \`phenotype mapper\` (the main app is unreleased yet).
 `;
 
-export const docsBasicUsage = `
+export const docsGettingStarted = `
+This section covers the basic steps of using this app.
+
+For detailed documentation please consult the
+<a href="/docs" target="_blank">Documentation</a>
+page.
+
 - First select the input dataset from your local filesystem, then specify the type of the input data.
 For input types,
 if your initial dataset is the 2022-07 mapping results data, then select "Mapping results",

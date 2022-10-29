@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Main from "../views/Main.vue";
 import Docs from "../views/Docs.vue";
+import GettingStarted from "../views/GettingStarted.vue";
 
 Vue.use(VueRouter);
 
@@ -10,6 +11,11 @@ const routes: Array<RouteConfig> = [
     path: "/",
     name: "Main",
     component: Main,
+  },
+  {
+    path: "/getting-started",
+    name: "GettingStarted",
+    component: GettingStarted,
   },
   {
     path: "/docs",

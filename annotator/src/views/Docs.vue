@@ -9,11 +9,6 @@ v-container
           vue-markdown(:source="docs.docsChangelog", :breaks="false")
       v-divider
       v-card.py-5
-        v-card-title Basic usage
-        v-card-text
-          vue-markdown(:source="docs.docsBasicUsage", :breaks="false")
-      v-divider
-      v-card.py-5
         v-card-title Technical specifications
         v-card-text
           vue-markdown(:source="docs.docsTechSpecs", :breaks="false")
