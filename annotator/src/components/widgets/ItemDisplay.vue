@@ -87,16 +87,29 @@ div(v-if="itemData")
           v-expansion-panel-content
             v-row
               v-col(cols="4")
-                h4 Equivalence mapping results
-                div(
-                  v-for="(item, idx) in itemData.equivalence_res",
-                  :key="idx"
+                tooltip(
+                  :docs="td.traitTermMapping",
+                  position="top",
+                  :show-underline="false"
                 )
-                  ent-item(:item="item")
+                  h4 Trait term mapping results
+                json-viewer(
+                  theme="json-viewer-gruvbox-dark",
+                  :value="itemData.trait_term_mapping",
+                  :expand-depth="3"
+                )
               v-col(cols="4")
-                h4 Composite mapping results
-                div(v-for="(item, idx) in itemData.composite_res", :key="idx")
-                  ent-item(:item="item")
+                tooltip(
+                  :docs="td.traitEntsMapping",
+                  position="top",
+                  :show-underline="false"
+                )
+                  h4 Component entity mapping results
+                json-viewer(
+                  theme="json-viewer-gruvbox-dark",
+                  :value="itemData.trait_ents_mapping",
+                  :expand-depth="3"
+                )
 </template>
 
 <script lang="ts">
@@ -107,6 +120,7 @@ import EntItem from "@/components/widgets/EntItem.vue";
 import ExternalSelection from "@/components/widgets/ExternalSelection.vue";
 import ExternalLookup from "@/components/widgets/ExternalLookup.vue";
 import * as types from "@/types/types";
+import * as td from "@/resources/tooltip-docs";
 
 export default Vue.extend({
   name: "ItemDisplay",
@@ -135,6 +149,7 @@ export default Vue.extend({
     return {
       itemData: null,
       panelState: [1],
+      td: td,
     };
   },
   computed: {
@@ -142,8 +157,9 @@ export default Vue.extend({
       const res = {
         trait_id: this.itemData.trait_id,
         trait_term: this.itemData.trait_term,
-        trait_term_query: this.itemData.trait_term_query,
         trait_basic_info: this.itemData.trait_basic_info,
+        augmentation_info: this.itemData.augmentation_info,
+        category: this.itemData.category,
       };
       return res;
     },

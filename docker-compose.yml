@@ -34,6 +34,8 @@ services:
       - ./annotator/:/app/
     ports:
       - ${DOCKER_ANNOTATOR_PORT:-8643}:8080
+    networks:
+      - default
 
   annotator:
     build:
@@ -41,7 +43,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - ${DOCKER_ANNOTATOR_PORT:-8642}:8080
+      - ${DOCKER_ANNOTATOR_PORT:-8642}:80
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.2.3

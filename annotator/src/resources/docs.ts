@@ -18,7 +18,8 @@ export const inputConfig = `
 - **file type**:
   - *Mapping results*: The 2022-07 mapping results format
     (typical filename is "results_general.json").
-  - *Annotation results*: The 2022-09 annotation results format,
+    **NOTE**: this is deprecated and no longer supported.
+  - *Annotation results*: The **v0.2 (2022-11)** annotation results format,
     which is also the file format you save the annotation results in.
     You should use this if you are loading from an earlier save file.
 `;
@@ -97,6 +98,15 @@ export const docsChangelog = `
 
 **Dev**
 
+None at the moment
+
+**2022-11-07, version 0.2.0**
+
+- Major changes to the annotation dataset format:
+  - The previous field \`equivalence_mapping_res\` is now \`trait_term_mapping\`
+  - The previous field \`composite_mapping_res\` is now \`trait_ents_mapping\`
+  - The 2022-07 mapping results format and the 2022-09 / v0.1 annotation results format are no longer supported
+  - THere are some residue todos to be finished in order to 1) fully deprecate previous formats 2) update documentation of v0.2
 - Introduced flags for mapping candidates
 - Flags for query traits are now called \`trait_flags\` to distinguish from \`cand_flags\` (flags for mapping candidates)
 

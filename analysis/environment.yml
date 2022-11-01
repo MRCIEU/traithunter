@@ -30,6 +30,8 @@ dependencies:
   - pip
   - pip:
     - nb_black
+    - ray
+    - unidecode
     - nxontology
     - scispacy
     - spacy

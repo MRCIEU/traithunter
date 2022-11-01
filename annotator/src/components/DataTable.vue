@@ -16,7 +16,7 @@ v-container(fluid)
           )
       v-col(cols="6")
         h3 Flag filter for query traits
-        v-subheader When enabled, will show query traits that contain ANY of the included flags (they first need to exist in the metadata settings)
+        v-subheader When enabled, will show query traits that contain ALL of the included flags (they first need to exist in the metadata settings)
         v-checkbox(
           label="Enable query item flag filter",
           v-model="useTraitFlagFilter"
@@ -40,7 +40,7 @@ v-container(fluid)
             )
               span {{ item }} &nbsp;
         h3 Flag filter for mapping candidate items
-        v-subheader When enabled, will show query items that contain ANY of the included flags for the mapping candidates (they first need to exist in the metadata settings)
+        v-subheader When enabled, will show query items that contain ALL of the included flags for the mapping candidates (they first need to exist in the metadata settings)
         v-checkbox(
           label="Enable candidate flag filter",
           v-model="useCandFlagFilter"
@@ -179,7 +179,7 @@ export default Vue.extend({
       if (this.useTraitFlagFilter) {
         res = this._.chain(res)
           .filter((e) => {
-            const good = this._.some(this.traitFlagSelect, (flag) =>
+            const good = this._.every(this.traitFlagSelect, (flag) =>
               e.trait_flags.includes(flag),
             );
             return good;
@@ -190,7 +190,7 @@ export default Vue.extend({
       if (this.useCandFlagFilter) {
         res = this._.chain(res)
           .filter((e) => {
-            const good = this._.some(this.candFlagSelect, (flag) => {
+            const good = this._.every(this.candFlagSelect, (flag) => {
               const candFlags = this._.chain(e.cand_flags)
                 .values()
                 .flatten()

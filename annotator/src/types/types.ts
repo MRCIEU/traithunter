@@ -1,4 +1,5 @@
 // # Overview
+// NOTE (2022-11-09): this hasn't been fully reworked on the v0.2 format
 //
 // - The 2022-07 mapping results format is declared by `MappingResultsInput`,
 //   which is an array (list) of individual `MappingResultsInputItem`.
@@ -70,17 +71,18 @@ export type MappingResultsInput = Array<MappingResultsInputItem>;
 export type AnnotationDataItem = {
   trait_id: string;
   trait_term: string;
-  trait_term_query: Array<string>;
   // Data availability inside `trait_basic_info` is subjected to
   // the source data
   trait_basic_info: Record<string, unknown>;
-  // Mapping results from equivalence mapping strategy
-  equivalence_res: Array<VectorEnt>;
-  // Mapping results from composite mapping strategy
-  composite_res: Array<VectorEnt>;
+  category: string;
+  augmentation_info: Record<string, unknown>;
+  // Mapping results for the query term
+  trait_term_mapping: Record<string, unknown>;
+  // Mapping results for augmented entities
+  trait_ents_mapping: Array<Record<string, unknown>>;
   // Concept entities aggregated from
   // both `equivalence_res` and `composite_res`
-  candidates: Array<VectorEnt>;
+  candidates: Array<Record<string, unknown>>;
   // Array of `ent_id` of `candidates`
   selection: Array<string>;
   // Picks from external source, if the candidates from mapping results

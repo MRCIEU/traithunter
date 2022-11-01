@@ -1,5 +1,5 @@
 <template lang="pug">
-v-container
+v-container(fluid)
   div(v-if="!initDone")
     h1 Getting started
     getting-started
@@ -122,7 +122,7 @@ export default Vue.extend({
 .floating-button {
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  bottom: 100px;
   z-index: 120;
 }
 </style>

@@ -15,7 +15,8 @@ v-container(fluid)
                 v-for="(item, idx) in _.chain(inputTypeOptions).values().value()",
                 :key="idx",
                 :label="item.label",
-                :value="item.value"
+                :value="item.value",
+                :disabled="item.disabled"
               )
         v-col(cols="6")
           vue-markdown(:source="docs.inputConfig", :breaks="false")
@@ -65,10 +66,12 @@ export default Vue.extend({
         "mapping-results": {
           label: "Mapping results",
           value: "mapping-results",
+          disabled: true,
         },
         "annotation-results": {
           label: "Annotation results",
           value: "annotation-results",
+          disabled: false,
         },
       },
       docs: docs,
@@ -133,6 +136,12 @@ export default Vue.extend({
         inputData: this.inputData,
         inputType: this.inputType,
       });
+      const outputFile = this.$store.state.io.output;
+      const exportData: types.AnnotationDataExport =
+        this.$store.getters["annotationData/annotationDataExport"];
+      await io.save(outputFile, exportData);
+      const lastSaveTime = new Date().toLocaleString();
+      await this.$store.dispatch("io/updateSaveTime", lastSaveTime);
       this.initDone = true;
       this.stage = 3;
     },

@@ -1,5 +1,5 @@
 <template lang="pug">
-v-container
+v-container(fluid)
   .px-5.mx-5
     v-card.py-5
       v-card-title Getting started

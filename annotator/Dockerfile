@@ -1,4 +1,4 @@
--*- mode: dockerfile -*-
+# -*- mode: dockerfile -*-
 # build stage
 FROM node:12.2.0-alpine as build-stage
 RUN apk add --no-cache git

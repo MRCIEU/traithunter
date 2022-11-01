@@ -9,9 +9,9 @@ div
           v-list-item-subtitle id: {{ item.ent_id }}
           v-list-item-subtitle
             span
-              | vector_term:
-              span.font-weight-bold {{ item.vector_term }}
-          v-list-item-subtitle primary_term: {{ item.primary_term }}
+              | synonyms:
+              span.font-weight-bold {{ item.synonyms }}
+          v-list-item-subtitle matched_terms: {{ item.matched_terms }}
 </template>
 
 <script lang="ts">
@@ -26,7 +26,8 @@ export default Vue.extend({
   },
   props: {
     item: {
-      type: Object as PropType<types.VectorEnt>,
+      // type: Object as PropType<types.VectorEnt>,
+      type: Object as PropType<Record<string, unknown>>,
       required: true,
     },
   },

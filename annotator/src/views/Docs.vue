@@ -1,5 +1,5 @@
 <template lang="pug">
-v-container
+v-container(fluid)
   v-row
     v-col(cols="6")
       v-card.py-5

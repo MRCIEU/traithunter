@@ -16,7 +16,7 @@ div
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "ItemDisplay",
+  name: "ExternalLookup",
   components: {
     //
   },
@@ -42,6 +42,14 @@ export default Vue.extend({
           label: "EpiGraphDB (meta-nodes)",
           url_fn: function (query: string): string {
             const url = `https://epigraphdb.org/search?meta_node&q=${query}`;
+            return url;
+          },
+        },
+        {
+          name: "google",
+          label: "Google",
+          url_fn: function (query: string): string {
+            const url = `https://google.com/search?q=${query}`;
             return url;
           },
         },
