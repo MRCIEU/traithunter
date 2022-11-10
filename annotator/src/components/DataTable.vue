@@ -70,6 +70,7 @@ v-container(fluid)
     v-data-iterator(
       :items="dataItemsSimple",
       item-key="trait_id",
+      :page.sync="page",
       :items-per-page="5",
       :search="search"
     )
@@ -77,7 +78,7 @@ v-container(fluid)
         v-toolbar.mb-1(dark, color="teal lighten-1")
           v-row
             v-spacer
-            v-col(cols="8")
+            v-col(cols="6")
               v-text-field(
                 v-model="search",
                 clearable,
@@ -87,6 +88,32 @@ v-container(fluid)
                 label="Search query term"
               )
             v-spacer
+            template(v-if="$vuetify.breakpoint.lgAndUp")
+              v-col(cols="6")
+                v-row.pt-2
+                  v-spacer
+                  v-col(cols="3")
+                    .pt-1
+                      span
+                        | current page
+                        | &nbsp;
+                        span.font-weight-bold {{ page }}
+                  v-col
+                    v-btn(outlined, @click="prevPage")
+                      v-icon mdi-chevron-left
+                  v-col
+                    v-btn(outlined, @click="nextPage")
+                      v-icon mdi-chevron-right
+                  v-col
+                    v-text-field(
+                      v-model="pageToGo",
+                      clearable,
+                      hide-details,
+                      label="Go to page"
+                    )
+                  v-col
+                    v-btn(outlined, @click="goToPage")
+                      v-icon mdi-navigation
       template(v-slot:default="props")
         div(v-for="item in props.items", :key="item.trait_id")
           item-display(
@@ -119,6 +146,8 @@ export default Vue.extend({
     return {
       search: null,
       preds: preds,
+      pageToGo: null,
+      page: 1,
       dataItems: [],
       predSelect: [],
       useTraitFlagFilter: false,
@@ -203,6 +232,17 @@ export default Vue.extend({
           .value();
       }
       this.dataItems = res;
+    },
+    goToPage() {
+      this.page = this.pageToGo;
+    },
+    prevPage() {
+      if (this.page > 1) {
+        this.page -= 1;
+      }
+    },
+    nextPage() {
+      this.page += 1;
     },
   },
 });
