@@ -15,6 +15,7 @@ dependencies:
   - nodejs
   - mypy
   - pytest
+  - nbqa
   # rest
   - metaflow
   - pyjanitor
