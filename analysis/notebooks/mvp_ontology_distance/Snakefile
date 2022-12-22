@@ -1,0 +1,24 @@
+from common_funcs import utils
+
+PROJ_ROOT = utils.find_project_root()
+DATA_DIR = PROJ_ROOT / ".." / "data"
+assert DATA_DIR.exists(), DATA_DIR
+OUTPUT_DIR = DATA_DIR / "output"
+
+rule hello:
+    shell: """
+    echo {PROJ_ROOT}
+    """
+
+data_prep_source_file = DATA_DIR / "mvp-efo-terms-2022-12" / "efo_all_sources_wide_19DEC2022.csv"
+data_prep_output_dir = OUTPUT_DIR / "mvp-efo-terms-2022-12"
+rule data_prep:
+    input:
+        source_file = data_prep_source_file
+    output:
+        output_file = data_prep_output_dir / "efo_terms.csv"
+    shell: """
+    python run_data_prep.py \
+      --input-file={input.source_file} \
+      --output-dir={data_prep_output_dir}
+    """

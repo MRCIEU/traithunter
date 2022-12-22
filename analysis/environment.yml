@@ -39,3 +39,5 @@ dependencies:
     - pandera
     - tqdm
     - python-levenshtein
+    - snakemake
+    - simple-parsing
