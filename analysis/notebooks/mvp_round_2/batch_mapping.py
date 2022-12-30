@@ -8,9 +8,8 @@ _pwd = Path(".").resolve()  # isort:skip
 sys.path.append(str(_pwd))  # isort:skip
 
 
-
 from common_funcs import utils  # isort:skip
-import mvp_funcs # isort:skip
+import mvp_funcs  # isort:skip
 
 proj_root = utils.find_project_root("docker-compose.yml")
 assert proj_root.exists(), proj_root

@@ -1,9 +1,10 @@
-from pathlib import Path
 import argparse
+from pathlib import Path
+
+from simple_parsing import ArgumentParser
 
 import pandas as pd  # noqa
 import janitor  # noqa
-from simple_parsing import ArgumentParser
 
 
 def make_args() -> argparse.Namespace:
@@ -20,6 +21,8 @@ def prep_data(input_file: Path, output_dir: Path):
         raw_df[["EFO_ID", "EFO_Term"]]
         .rename(columns={"EFO_ID": "efo_id", "EFO_Term": "efo_term"})
         .assign(idx=lambda df: df.index)
+        # treat term asis for now
+        .assign(efo_term_clean=lambda df: df["efo_term"])
         .assign(
             id=lambda df: df.apply(
                 lambda row: "{efo_id}_{idx}".format(

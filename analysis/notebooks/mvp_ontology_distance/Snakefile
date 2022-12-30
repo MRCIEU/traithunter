@@ -10,15 +10,28 @@ rule hello:
     echo {PROJ_ROOT}
     """
 
-data_prep_source_file = DATA_DIR / "mvp-efo-terms-2022-12" / "efo_all_sources_wide_19DEC2022.csv"
-data_prep_output_dir = OUTPUT_DIR / "mvp-efo-terms-2022-12"
+SOURCE_FILE = DATA_DIR / "mvp-efo-terms-2022-12" / "efo_all_sources_wide_22DEC2022.csv"
+assert SOURCE_FILE.exists(), SOURCE_FILE
+OUTPUT_DIR = DATA_DIR / "output" / "mvp-efo-terms-2022-12"
+
 rule data_prep:
+    "Data cleaning"
     input:
-        source_file = data_prep_source_file
+        source_file = SOURCE_FILE
     output:
-        output_file = data_prep_output_dir / "efo_terms.csv"
+        output_file = OUTPUT_DIR / "efo_terms.csv"
     shell: """
     python run_data_prep.py \
       --input-file={input.source_file} \
-      --output-dir={data_prep_output_dir}
+      --output-dir={OUTPUT_DIR}
+    """
+
+rule encode:
+    "Encode terms"
+    input:
+        input_file = rules.data_prep.output.output_file
+    shell: """
+    python run_encode.py \
+      --input-file={input.input_file} \
+      --output-dir={OUTPUT_DIR}
     """
