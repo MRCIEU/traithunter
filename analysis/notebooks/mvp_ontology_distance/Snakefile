@@ -30,8 +30,22 @@ rule encode:
     "Encode terms"
     input:
         input_file = rules.data_prep.output.output_file
+    output:
+        output_file = OUTPUT_DIR / "encode.json"
     shell: """
     python run_encode.py \
+      --input-file={input.input_file} \
+      --output-dir={OUTPUT_DIR}
+    """
+
+rule distance:
+    "Term vector cosine distance"
+    input:
+        input_file = rules.encode.output.output_file
+    output:
+        output_file = OUTPUT_DIR / "distance.csv"
+    shell: """
+    python run_distance.py \
       --input-file={input.input_file} \
       --output-dir={OUTPUT_DIR}
     """

@@ -4,8 +4,8 @@ import math
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
-import numpy as np
 
+import numpy as np
 import ray
 import spacy
 from pydash import py_
