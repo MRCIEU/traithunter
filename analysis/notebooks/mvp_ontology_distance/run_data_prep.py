@@ -23,15 +23,15 @@ def prep_data(input_file: Path, output_dir: Path):
         .assign(idx=lambda df: df.index)
         # treat term asis for now
         .assign(efo_term_clean=lambda df: df["efo_term"])
-        .assign(
-            id=lambda df: df.apply(
-                lambda row: "{efo_id}_{idx}".format(
-                    efo_id=row["efo_id"], idx=row["idx"]
-                ),
-                axis=1,
-            )
-        )
-        .drop(columns=["idx"])
+        # .assign(
+        #     id=lambda df: df.apply(
+        #         lambda row: "{efo_id}_{idx}".format(
+        #             efo_id=row["efo_id"], idx=row["idx"]
+        #         ),
+        #         axis=1,
+        #     )
+        # )
+        # .drop(columns=["idx"])
         .also(lambda df: print("Cleaned df: ", df.info()))
     )
     output_path = output_dir / "efo_terms.csv"

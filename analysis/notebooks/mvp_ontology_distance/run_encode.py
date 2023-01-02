@@ -1,7 +1,6 @@
 import argparse
 import json
 import math
-from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -11,14 +10,14 @@ import spacy
 from pydash import py_
 from simple_parsing import ArgumentParser
 
-from analysis_funcs import paths
+from analysis_funcs import paths, now
 
 import pandas as pd  # noqa
 import janitor  # noqa
 
 
 def make_conf() -> argparse.Namespace:
-    NUM_WORKERS = 12
+    NUM_WORKERS = 4
     TRIAL_SAMPLE = 500
     data_dir = paths.data_root
     SUB_PROJ_NAME = "mvp-efo-terms-2022-12"
@@ -54,16 +53,14 @@ def make_conf() -> argparse.Namespace:
 class ItemEncoder:
     def __init__(self, idx: int, model_path: Path):
         self.idx = f"Encoder {idx}"
-        print(f"{self.idx}: Init model")
+        print(f"{now()} {self.idx}: Init model")
         self.nlp = spacy.load(model_path)
-        print(f"{self.idx}: Model loaded")
+        print(f"{now()} {self.idx}: Model loaded")
 
-    def encode_items(self, idx: int, item: Dict[str, Any]):
+    def encode_items(self, idx: int, total: int, item: Dict[str, Any]):
         echo_step = 200
         if idx % echo_step == 0:
-            now = datetime.now()
-            now_str = now.strftime("%H:%M:%S")
-            print(f"{now_str} {self.idx}: # {idx}")
+            print(f"{now()} {self.idx}: # {idx} / {total}")
         term_col = "efo_term_clean"
         term = item[term_col]
         vector = self.nlp(term).vector.tolist()
@@ -75,9 +72,12 @@ class ItemEncoder:
         return res
 
     def encode_chunk(self, item_list: List[Dict]):
-        print(f"{self.idx}: Start to process {len(item_list)} items")
-        res = [self.encode_items(idx=idx, item=_) for idx, _ in enumerate(item_list)]
-        print(f"{self.idx}: Finish process")
+        print(f"{now()} {self.idx}: Start to process {len(item_list)} items")
+        res = [
+            self.encode_items(idx=idx, total=len(item_list), item=_)
+            for idx, _ in enumerate(item_list)
+        ]
+        print(f"{now()} {self.idx}: Finish process")
         return res
 
 
@@ -138,23 +138,34 @@ def main():
     )
     if conf.trial:
         efo_terms = efo_terms[: conf.trial_sample]
-    chunks = py_.chunk(efo_terms, size=math.floor(len(efo_terms) / conf.num_workers))
-    print(f"len chunks {len(chunks)}")
-    print(f"len chunks[0] {len(chunks[0])}")
+    chunks = py_.chunk(efo_terms, size=math.ceil(len(efo_terms) / conf.num_workers))
+    print(f"{now()} len chunks {len(chunks)}")
+    print(f"{now()} len chunks[0] {len(chunks[0])}")
 
     # # encode
-    print("# Encode")
+    print(f"{now()} # Encode")
 
     if not conf.dry_run:
         encode_res = encode_main(chunks=chunks, conf=conf)
+        print(f"{now()} len encode_res {len(encode_res)}")
         with conf.output_encode_path.open("w") as f:
             json.dump(encode_res, f)
 
     # # diagnosis
-    print("# Diagnosis")
+    print("{now()} # Diagnosis")
     if not conf.dry_run:
         encode_fails = check_encode_fails(encode_res)
         encode_fails.to_csv(conf.output_encode_fails_path, index=False)
+        # check if there are efo terms ignored
+        orig_ids = set([_["efo_id"] for _ in efo_terms])
+        print(f"len orig {len(orig_ids)}")
+        encode_ids = set([_["efo_id"] for _ in encode_res])
+        print(f"len encode {len(encode_ids)}")
+        diff = orig_ids.difference(encode_ids)
+        print(f"diff {diff}")
+        df = pd.DataFrame(efo_terms)
+        df = df[df["efo_id"].isin(list(diff))]
+        print(f"diff details {df}")
 
     if ray.is_initialized():
         ray.shutdown()

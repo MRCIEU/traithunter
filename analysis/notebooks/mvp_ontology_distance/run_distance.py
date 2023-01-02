@@ -97,7 +97,7 @@ def cosine_sim(a: List[float], b: List[float]) -> float:
 def distance_main(vectors_df: pd.DataFrame, conf: Conf) -> pd.DataFrame:
     id_list = vectors_df.index.tolist()
     combs = list(combinations(id_list, 2))
-    chunks = py_.chunk(combs, size=math.floor(len(combs) / conf.num_workers))
+    chunks = py_.chunk(combs, size=math.ceil(len(combs) / conf.num_workers))
     print(f"len chunks {len(chunks)}")
     print(f"len chunks[0] {len(chunks[0])}")
 
