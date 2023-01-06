@@ -10,7 +10,7 @@ import spacy
 from pydash import py_
 from simple_parsing import ArgumentParser
 
-from analysis_funcs import paths, now
+from analysis_funcs import now, paths
 
 import pandas as pd  # noqa
 import janitor  # noqa

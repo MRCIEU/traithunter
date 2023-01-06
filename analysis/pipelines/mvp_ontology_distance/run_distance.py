@@ -12,7 +12,7 @@ from pydash import py_
 from scipy.spatial import distance
 from simple_parsing import field
 
-from analysis_funcs import paths, now
+from analysis_funcs import now, paths
 
 import pandas as pd  # noqa
 import janitor  # noqa
@@ -87,6 +87,7 @@ def cosine_sim(a: List[float], b: List[float]) -> float:
     def _invalid(vector: List[float]):
         res = not np.any(vector)
         return res
+
     if _invalid(a) or _invalid(b):
         return np.nan
     sim = 1 - distance.cosine(np.array(a), np.array(b))
@@ -109,10 +110,7 @@ def distance_main(vectors_df: pd.DataFrame, conf: Conf) -> pd.DataFrame:
         [worker.calc_chunk.remote(chunks[idx]) for idx, worker in enumerate(workers)]
     )
     print(f"{now()} Finish nested results")
-    res = pd.concat([
-        pd.DataFrame(_)
-        for _ in chunk_res
-    ]).reset_index(drop=True)
+    res = pd.concat([pd.DataFrame(_) for _ in chunk_res]).reset_index(drop=True)
     print(f"{now()} Finish flatten results")
     return res
 
