@@ -41,7 +41,7 @@ services:
     build:
       context: ./annotator
       dockerfile: Dockerfile
-    restart: unless-stopped
+    restart: always
     ports:
       - ${DOCKER_ANNOTATOR_PORT:-8642}:80
 
