@@ -13,7 +13,7 @@ class CleanedDf(pa.SchemaModel):
     efo_term_clean: Series[str]
 
 
-class EncodeFail(pa.SchemaModel):
+class EncodeFails(pa.SchemaModel):
     efo_id: Series[str]
     term: Series[str]
 

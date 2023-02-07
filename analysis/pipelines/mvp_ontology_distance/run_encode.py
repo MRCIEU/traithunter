@@ -15,12 +15,14 @@ from analysis_funcs import now, paths
 import pandas as pd  # noqa
 import janitor  # noqa
 
+from local_utils import data_types  # isort:skip
+
 
 def make_conf() -> argparse.Namespace:
     NUM_WORKERS = 4
     TRIAL_SAMPLE = 500
     data_dir = paths.data_root
-    SUB_PROJ_NAME = "mvp-efo-terms-2022-12"
+    SUB_PROJ_NAME = "mvp-ontology-terms-2023-01"
     OUTPUT_DIR = data_dir / "output" / SUB_PROJ_NAME
     INPUT_FILE = OUTPUT_DIR / "efo_terms.csv"
     MODEL_PATH = paths.models["scispacy_lg"]
@@ -117,7 +119,9 @@ def check_encode_fails(encode_res: List[Dict[str, Any]]) -> pd.DataFrame:
             for _ in encode_res
         ]
     )
-    encode_fails = encode_fails[encode_fails["fail"]].reset_index(drop=True)
+    encode_fails = (
+        encode_fails[encode_fails["fail"]].drop(columns=["fail"]).reset_index(drop=True)
+    )
     return encode_fails
 
 
@@ -133,6 +137,7 @@ def main():
     # # term chunks
     efo_terms = (
         pd.read_csv(conf.input_file)
+        .also(lambda df: data_types.CleanedDf.validate(df))
         .also(lambda df: print("efo terms: ", df.info()))
         .to_dict(orient="records")
     )
@@ -152,10 +157,11 @@ def main():
             json.dump(encode_res, f)
 
     # # diagnosis
-    print("{now()} # Diagnosis")
+    print(f"{now()} # Diagnosis")
     if not conf.dry_run:
         encode_fails = check_encode_fails(encode_res)
         encode_fails.to_csv(conf.output_encode_fails_path, index=False)
+        data_types.EncodeFails.validate(encode_fails)
         # check if there are efo terms ignored
         orig_ids = set([_["efo_id"] for _ in efo_terms])
         print(f"len orig {len(orig_ids)}")
