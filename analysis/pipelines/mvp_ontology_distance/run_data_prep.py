@@ -17,13 +17,19 @@ def make_args() -> argparse.Namespace:
     return args
 
 
+def clean_label(text: str) -> str:
+    text_clean = text
+    text_clean = text_clean.replace("obsolete_", "")
+    return text_clean
+
+
 def prep_data(input_file: Path, output_dir: Path) -> pd.DataFrame:
     raw_df = pd.read_csv(input_file).also(lambda df: print("Raw df: ", df.info()))
     data_types.SourceDf.validate(raw_df)
     df = (
         raw_df[["EFO_ID", "EFO_Term"]]
         .rename(columns={"EFO_ID": "efo_id", "EFO_Term": "efo_term"})
-        .assign(efo_term_clean=lambda df: df["efo_term"])
+        .assign(efo_term_clean=lambda df: df["efo_term"].apply(clean_label))
         .also(lambda df: print("Cleaned df: ", df.info()))
     )
     output_path = output_dir / "efo_terms.csv"
