@@ -17,8 +17,10 @@ from analysis_funcs import now, paths
 import pandas as pd  # noqa
 import janitor  # noqa
 
+from local_utils import data_types  # isort:skip
+
 data_dir = paths.data_root
-SUB_PROJ_NAME = "mvp-efo-terms-2022-12"
+SUB_PROJ_NAME = "mvp-ontology-terms-2023-01"
 OUTPUT_DIR = data_dir / "output" / SUB_PROJ_NAME
 INPUT_FILE = OUTPUT_DIR / "encode.json"
 
@@ -134,6 +136,7 @@ def main():
         print(f"{now()} Start processing")
         distance_res = distance_main(vectors_df, conf=conf)
         distance_res.to_csv(conf.output_file, index=False)
+        data_types.DistanceDf.validate(distance_res)
 
     print(f"{now()} All done")
     if ray.is_initialized():
