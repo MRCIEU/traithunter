@@ -10,9 +10,10 @@ rule hello:
     echo {PROJ_ROOT}
     """
 
-SOURCE_FILE = DATA_DIR / "mvp-efo-terms-2022-12" / "efo_all_sources_wide_22DEC2022.csv"
+# SOURCE_FILE = DATA_DIR / "mvp-efo-terms-2022-12" / "efo_all_sources_wide_22DEC2022.csv"
+SOURCE_FILE = DATA_DIR / "source" / "mvp-ontology-terms-2023-01" / "ontology_masterfile_for_Yi_31JAN2023.csv"
 assert SOURCE_FILE.exists(), SOURCE_FILE
-OUTPUT_DIR = DATA_DIR / "output" / "mvp-efo-terms-2022-12"
+OUTPUT_DIR = DATA_DIR / "output" / "mvp-ontology-terms-2023-01"
 
 rule data_prep:
     "Data cleaning"

@@ -6,6 +6,8 @@ from simple_parsing import ArgumentParser
 import pandas as pd  # noqa
 import janitor  # noqa
 
+from local_utils import data_types  # isort:skip
+
 
 def make_args() -> argparse.Namespace:
     parser = ArgumentParser()
@@ -15,28 +17,19 @@ def make_args() -> argparse.Namespace:
     return args
 
 
-def prep_data(input_file: Path, output_dir: Path):
+def prep_data(input_file: Path, output_dir: Path) -> pd.DataFrame:
     raw_df = pd.read_csv(input_file).also(lambda df: print("Raw df: ", df.info()))
+    data_types.SourceDf.validate(raw_df)
     df = (
         raw_df[["EFO_ID", "EFO_Term"]]
         .rename(columns={"EFO_ID": "efo_id", "EFO_Term": "efo_term"})
-        .assign(idx=lambda df: df.index)
-        # treat term asis for now
         .assign(efo_term_clean=lambda df: df["efo_term"])
-        # .assign(
-        #     id=lambda df: df.apply(
-        #         lambda row: "{efo_id}_{idx}".format(
-        #             efo_id=row["efo_id"], idx=row["idx"]
-        #         ),
-        #         axis=1,
-        #     )
-        # )
-        # .drop(columns=["idx"])
         .also(lambda df: print("Cleaned df: ", df.info()))
     )
     output_path = output_dir / "efo_terms.csv"
     print(f"Write cleaned df to: {output_path}")
     df.to_csv(output_path, index=False)
+    return df
 
 
 def main():
@@ -46,7 +39,8 @@ def main():
     output_dir = Path(args.output_dir)
     print(f"output_dir {output_dir}")
     output_dir.mkdir(exist_ok=True)
-    prep_data(input_file=input_file, output_dir=output_dir)
+    cleaned_df = prep_data(input_file=input_file, output_dir=output_dir)
+    data_types.CleanedDf.validate(cleaned_df)
 
 
 if __name__ == "__main__":
