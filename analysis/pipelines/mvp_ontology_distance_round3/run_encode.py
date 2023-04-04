@@ -23,11 +23,13 @@ from local_utils import es_config  # isort:skip
 class EncodeInputItem(TypedDict):
     id: str
     term: str
+    term_clean: str
 
 
 class EncodeRes(TypedDict):
     id: str
     term: str
+    term_clean: str
     term_vector: List[float]
 
 
@@ -76,6 +78,7 @@ def make_conf() -> argparse.Namespace:
     conf.es_url = settings.es_url
     conf.trial_sample = TRIAL_SAMPLE
     conf.trial_suffix = "" if not conf.trial else "_trial"
+    conf.clean_df_path = conf.output_dir / "clean_terms.csv"
     conf.output_encode_fails_path = (
         conf.output_dir / f"encode_fails{conf.trial_suffix}.csv"
     )
@@ -83,8 +86,17 @@ def make_conf() -> argparse.Namespace:
     return conf
 
 
-def make_es_index_conf(TODO):
-    TODO
+def clean_input(source_df: pd.DataFrame) -> pd.DataFrame:
+    def _clean_term(text: str) -> str:
+        text = text.replace("obsolete_", "")
+        # scispacy model does not properly tokenize slashes without spaces
+        # so enforce
+        # for slashes already with spaces this does not affect much
+        text = text.replace("/", " / ")
+        return text
+
+    clean_df = source_df.assign(term_clean=lambda df: df["term"].apply(_clean_term))
+    return clean_df
 
 
 @ray.remote(num_cpus=1)
@@ -99,11 +111,12 @@ class ItemEncoder:
         echo_step = 200
         if idx % echo_step == 0:
             logger.info(f"{self.idx}: # {idx} / {total}")
-        term = item["term"]
+        term = item["term_clean"]
         vector = self.nlp(term).vector.tolist()
         res: EncodeRes = {
             "id": item["id"],
             "term": term,
+            "term_clean": term,
             "term_vector": vector,
         }
         return res
@@ -127,10 +140,7 @@ def get_encode_fails(encode_res: List[EncodeRes]) -> pd.DataFrame:
 
     encode_fails = pd.DataFrame(
         [
-            {
-                "id": _["id"],
-                "term": _["term"],
-            }
+            {"id": _["id"], "term": _["term"], "term_clean": _["term_clean"]}
             for _ in encode_res
             if _check_fail(_["term_vector"])
         ]
@@ -225,10 +235,12 @@ def main():
     source_list = source_df["source"].drop_duplicates().tolist()
     logger.info(f"source_list {source_list}")
     # ## sample to process
+    clean_df = clean_input(source_df)
+    clean_df.to_csv(conf.clean_df_path, index=False)
     sample_df = (
-        source_df
+        clean_df
         if not conf.trial
-        else source_df.groupby("source").head(conf.trial_sample)
+        else clean_df.groupby("source").head(conf.trial_sample)
     )
     sample_df.info()
 
