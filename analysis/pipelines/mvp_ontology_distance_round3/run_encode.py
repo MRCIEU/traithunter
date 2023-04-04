@@ -18,6 +18,7 @@ from analysis_funcs import es, paths, settings
 import pandas as pd  # noqa
 import janitor  # noqa
 
+import local_utils  # isort:skip
 from local_utils import es_config  # isort:skip
 
 
@@ -33,18 +34,18 @@ MODEL_PATH = paths.models["scispacy_lg"]
 
 @dataclass
 class Conf:
+    dry_run: bool = field(alias="dry-run", action="store_true")
+    trial: bool = field(action="store_true")
     input_file: Union[str, Path] = field(alias="input-file", default=INPUT_FILE)
     output_dir: Union[str, Path] = field(alias="output-dir", default=OUTPUT_DIR)
     model_path: Union[str, Path] = field(alias="model-path", default=MODEL_PATH)
-    num_workers: int = 12
+    num_workers: int = NUM_WORKERS
     echo_step: int = 200
     es_url: str = settings.es_url
     trial_sample: int = TRIAL_SAMPLE
     trial_suffix: str = ""
     clean_df_path: Union[str, Path] = OUTPUT_DIR / "clean_terms.csv"
     output_encode_fails_path: Optional[Union[str, Path]] = None
-    dry_run: bool = field(alias="dry-run", action="store_true")
-    trial: bool = field(action="store_true")
 
 
 class EncodeInputItem(TypedDict):
@@ -65,14 +66,6 @@ class IndexRecord(TypedDict):
     ent_term: str
     vector_term: str
     vector: List[float]
-
-
-def get_es_index_for_source(source: str, trial: bool) -> str:
-    trial_str = "--trial" if trial else ""
-    res = "mvp-ontology-source-{source}{trial_str}".format(
-        source=source.lower(), trial_str=trial_str
-    )
-    return res
 
 
 def make_conf() -> Conf:
@@ -166,7 +159,7 @@ def main_encode(
 
 
 def main_index(index_sample: List[IndexRecord], source: str, conf: Conf) -> None:
-    index_name = get_es_index_for_source(source=source, trial=conf.trial)
+    index_name = local_utils.get_es_index_for_source(source=source, trial=conf.trial)
     logger.info(
         f"ES: index {index_name}, start; indexing {len(index_sample):_} records"
     )
