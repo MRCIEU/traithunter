@@ -1,15 +1,16 @@
-import argparse
 import math
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 import ray
 import requests
+import simple_parsing
 import spacy
 from loguru import logger
 from pydash import py_
-from simple_parsing import ArgumentParser
+from simple_parsing import field
 from typing_extensions import TypedDict
 
 from analysis_funcs import es, paths, settings
@@ -18,6 +19,32 @@ import pandas as pd  # noqa
 import janitor  # noqa
 
 from local_utils import es_config  # isort:skip
+
+
+NUM_WORKERS = 4
+TRIAL_SAMPLE = 500
+data_dir = paths.data_root
+SUB_PROJ_NAME = "mvp-ontology-terms-2023-03"
+INPUT_DIR = data_dir / "source" / SUB_PROJ_NAME
+OUTPUT_DIR = data_dir / "output" / SUB_PROJ_NAME
+INPUT_FILE = INPUT_DIR / "ontology_source_descriptors_for_distance_calc_16MAR2023.csv"
+MODEL_PATH = paths.models["scispacy_lg"]
+
+
+@dataclass
+class Conf:
+    input_file: Union[str, Path] = field(alias="input-file", default=INPUT_FILE)
+    output_dir: Union[str, Path] = field(alias="output-dir", default=OUTPUT_DIR)
+    model_path: Union[str, Path] = field(alias="model-path", default=MODEL_PATH)
+    num_workers: int = 12
+    echo_step: int = 200
+    es_url: str = settings.es_url
+    trial_sample: int = TRIAL_SAMPLE
+    trial_suffix: str = ""
+    clean_df_path: Union[str, Path] = OUTPUT_DIR / "clean_terms.csv"
+    output_encode_fails_path: Optional[Union[str, Path]] = None
+    dry_run: bool = field(alias="dry-run", action="store_true")
+    trial: bool = field(action="store_true")
 
 
 class EncodeInputItem(TypedDict):
@@ -48,37 +75,13 @@ def get_es_index_for_source(source: str, trial: bool) -> str:
     return res
 
 
-def make_conf() -> argparse.Namespace:
-    NUM_WORKERS = 4
-    TRIAL_SAMPLE = 500
-    data_dir = paths.data_root
-    SUB_PROJ_NAME = "mvp-ontology-terms-2023-03"
-    INPUT_DIR = data_dir / "source" / SUB_PROJ_NAME
-    OUTPUT_DIR = data_dir / "output" / SUB_PROJ_NAME
-    INPUT_FILE = (
-        INPUT_DIR / "ontology_source_descriptors_for_distance_calc_16MAR2023.csv"
-    )
-    MODEL_PATH = paths.models["scispacy_lg"]
-
-    parser = ArgumentParser()
-    parser.add_argument("--input-file", type=str, help="input file", default=INPUT_FILE)
-    parser.add_argument(
-        "--output-dir", type=str, help="output directory", default=OUTPUT_DIR
-    )
-    parser.add_argument("--trial", help="trial", action="store_true")
-    parser.add_argument("--dry-run", help="dry run", action="store_true")
-
-    conf = parser.parse_args()
-    assert conf.input_file.exists(), conf.input_file
-    conf.output_dir = Path(conf.output_dir)
-    conf.output_dir.mkdir(exist_ok=True)
-    conf.model_path = MODEL_PATH
-    assert conf.model_path.exists(), conf.model_path
-    conf.num_workers = NUM_WORKERS
-    conf.es_url = settings.es_url
-    conf.trial_sample = TRIAL_SAMPLE
+def make_conf() -> Conf:
+    conf: Conf = simple_parsing.parse(Conf)
     conf.trial_suffix = "" if not conf.trial else "_trial"
-    conf.clean_df_path = conf.output_dir / "clean_terms.csv"
+    conf.input_file = Path(conf.input_file)
+    conf.output_dir = Path(conf.output_dir)
+    conf.model_path = Path(conf.model_path)
+    conf.clean_df_path = Path(conf.clean_df_path)
     conf.output_encode_fails_path = (
         conf.output_dir / f"encode_fails{conf.trial_suffix}.csv"
     )
@@ -149,7 +152,7 @@ def get_encode_fails(encode_res: List[EncodeRes]) -> pd.DataFrame:
 
 
 def main_encode(
-    sample: List[EncodeInputItem], encoders: List[ItemEncoder], conf: argparse.Namespace
+    sample: List[EncodeInputItem], encoders: List[ItemEncoder], conf: Conf
 ) -> List[EncodeRes]:
     chunks = py_.chunk(sample, size=math.ceil(len(sample) / conf.num_workers))
     chunk_res = ray.get(
@@ -162,9 +165,7 @@ def main_encode(
     return res
 
 
-def main_index(
-    index_sample: List[IndexRecord], source: str, conf: argparse.Namespace
-) -> None:
+def main_index(index_sample: List[IndexRecord], source: str, conf: Conf) -> None:
     index_name = get_es_index_for_source(source=source, trial=conf.trial)
     logger.info(
         f"ES: index {index_name}, start; indexing {len(index_sample):_} records"
@@ -177,7 +178,9 @@ def main_index(
     index_conf = es_config.make_es_index_conf()
     es.init_index(es_url=conf.es_url, index_name=index_name, config=index_conf)
     docs: List[Dict[str, Any]] = [_ for _ in index_sample]
-    es.bulk_index(es_url=conf.es_url, index_name=index_name, docs=docs, logger_step=200)
+    es.bulk_index(
+        es_url=conf.es_url, index_name=index_name, docs=docs, logger_step=conf.echo_step
+    )
     logger.info(f"ES: index {index_name}, done")
 
 
@@ -185,7 +188,7 @@ def main_process(
     source: str,
     encoders: List[ItemEncoder],
     sample_df: pd.DataFrame,
-    conf: argparse.Namespace,
+    conf: Conf,
 ) -> pd.DataFrame:
     # sample
     sample: List[EncodeInputItem] = sample_df[sample_df["source"] == source].to_dict(
