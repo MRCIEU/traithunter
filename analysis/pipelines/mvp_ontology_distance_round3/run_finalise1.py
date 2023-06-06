@@ -2,15 +2,15 @@ import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 
-import requests
 import pandas as pd
+import requests
 import simple_parsing
 from loguru import logger
 from simple_parsing import field
 
 from analysis_funcs import paths, settings
-import local_utils
 
+import local_utils  # isort:skip
 
 data_dir = paths.data_root
 SUB_PROJ_NAME = "mvp-ontology-terms-2023-03"
@@ -87,11 +87,11 @@ def main():
         pairwise_df = pd.read_csv(conf.input_pairwise_scores_path)
         sample_df = pairwise_df if not conf.trial else pairwise_df[:3000]
         con = sqlite3.connect(conf.output_pairwise_scores_db_path)
-        logger.info(f"Write 'terms' table")
+        logger.info("Write 'terms' table")
         terms_df.set_index("id").to_sql(
             name="terms", con=con, if_exists="replace", index=True
         )
-        logger.info(f"Write 'distance' table")
+        logger.info("Write 'distance' table")
         sample_df.set_index(["id_a", "id_b"]).to_sql(
             name="distance",
             con=con,
