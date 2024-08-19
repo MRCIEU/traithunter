@@ -58,7 +58,7 @@ def index_ukbb_bge(conf: Conf):
     logger.info(f"load {data_path}: start.")
     with data_path.open() as f:
         df = pd.DataFrame(json.load(f))
-        logger.info("load {data_path}: done.")
+        logger.info(f"load {data_path}: done.")
         if conf.trial:
             df = df[: conf.trial_limit]
         df.info()
@@ -97,7 +97,7 @@ def index_ukbb_llama3(conf: Conf):
     logger.info(f"load {data_path}: start.")
     with data_path.open() as f:
         df = pd.DataFrame(json.load(f))
-        logger.info("load {data_path}: done.")
+        logger.info(f"load {data_path}: done.")
         if conf.trial:
             df = df[: conf.trial_limit]
         df.info()
@@ -108,8 +108,8 @@ def index_ukbb_llama3(conf: Conf):
             "notes": "definition",
         }
     ).assign(
-        vector_term=lambda df: df["vector_term"].apply(lambda x: x[0]),
-        vector_full=lambda df: df["vector_full"].apply(lambda x: x[0]),
+        vector_title=lambda df: df["vector_title"].apply(lambda x: x[0]),
+        vector_full=lambda df: df["vector_full_term"].apply(lambda x: x[0]),
     )
 
     logger.info(f"index {index_name}: start indexing.")
@@ -139,7 +139,7 @@ def index_hpo_bge(conf: Conf):
     logger.info(f"load {data_path}: start.")
     with data_path.open() as f:
         df = pd.DataFrame(json.load(f))
-        logger.info("load {data_path}: done.")
+        logger.info(f"load {data_path}: done.")
         if conf.trial:
             df = df[: conf.trial_limit]
         df.info()
@@ -171,14 +171,14 @@ def index_hpo_llama3(conf: Conf):
     logger.info(f"load {data_path}: start.")
     with data_path.open() as f:
         df = pd.DataFrame(json.load(f))
-        logger.info("load {data_path}: done.")
+        logger.info(f"load {data_path}: done.")
         if conf.trial:
             df = df[: conf.trial_limit]
         df.info()
 
     df = df.assign(
-        vector_term=lambda df: df["vector_term"].apply(lambda x: x[0]),
-        vector_full=lambda df: df["vector_full"].apply(lambda x: x[0]),
+        vector_title=lambda df: df["vector_title"].apply(lambda x: x[0]),
+        vector_full=lambda df: df["vector_full_term"].apply(lambda x: x[0]),
     )
 
     logger.info(f"index {index_name}: start indexing.")

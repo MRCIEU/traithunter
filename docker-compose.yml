@@ -75,7 +75,7 @@ services:
       - ${DOCKER_ES_NEW_PORT:-6360}:9200
     tty: true
     volumes:
-      - phenotype_es_data:/usr/share/elasticsearch/data
+      - phenotype_es_data-new:/usr/share/elasticsearch/data
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -93,4 +93,6 @@ services:
 
 volumes:
   phenotype_es_data:
+    driver: local
+  phenotype_es_data-new:
     driver: local
