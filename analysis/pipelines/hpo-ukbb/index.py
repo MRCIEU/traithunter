@@ -9,7 +9,6 @@ from simple_parsing import field
 
 from analysis_funcs import es
 from analysis_funcs.paths import data_root
-from analysis_funcs.settings import es_url
 
 from local_utils.es_config import INDEX_CONFIGS, INDEX_NAMES  # isort:skip
 
@@ -23,6 +22,7 @@ assert DATA_DIR_UKBB.exists(), print(DATA_DIR_UKBB)
 class Conf:
     dry_run: bool = field(alias="dry-run", action="store_true")
     rewrite: bool = field(alias="rewrite", action="store_true")
+    es_url: str = "http://localhost:6360"
     trial: bool = field(alias="trial", action="store_true")
     trial_limit: int = 500
 
@@ -33,8 +33,8 @@ def make_conf() -> Conf:
     return conf
 
 
-def init():
-    r = requests.get(es_url)
+def init(conf: Conf):
+    r = requests.get(conf.es_url)
     assert r.ok, r.text
 
 
@@ -44,13 +44,13 @@ def index_ukbb_bge(conf: Conf):
     if conf.trial:
         index_name = index_name + "--trial"
     index_config = INDEX_CONFIGS[alias]
-    if es.index_exists(es_url, index_name):
+    if es.index_exists(conf.es_url, index_name):
         if not conf.rewrite:
             logger.info(f"index {index_name} exists; skipping.")
             return None
         else:
-            es.drop_index(es_url, index_name)
-    es.init_index(es_url=es_url, index_name=index_name, config=index_config)
+            es.drop_index(conf.es_url, index_name)
+    es.init_index(es_url=conf.es_url, index_name=index_name, config=index_config)
 
     data_path = DATA_DIR_UKBB / "embeddings_ukbb.json"
     assert data_path.exists(), print(data_path)
@@ -72,7 +72,7 @@ def index_ukbb_bge(conf: Conf):
 
     logger.info(f"index {index_name}: start indexing.")
     es.bulk_index(
-        es_url=es_url, index_name=index_name, docs=df.to_dict(orient="records")
+        es_url=conf.es_url, index_name=index_name, docs=df.to_dict(orient="records")
     )
     logger.info(f"index {index_name}: done indexing.")
 
@@ -83,13 +83,13 @@ def index_ukbb_llama3(conf: Conf):
     if conf.trial:
         index_name = index_name + "--trial"
     index_config = INDEX_CONFIGS[alias]
-    if es.index_exists(es_url, index_name):
+    if es.index_exists(conf.es_url, index_name):
         if not conf.rewrite:
             logger.info(f"index {index_name} exists; skipping.")
             return None
         else:
-            es.drop_index(es_url, index_name)
-    es.init_index(es_url=es_url, index_name=index_name, config=index_config)
+            es.drop_index(conf.es_url, index_name)
+    es.init_index(es_url=conf.es_url, index_name=index_name, config=index_config)
 
     data_path = DATA_DIR_UKBB / "embeddings_ukbb_llama3.json"
     assert data_path.exists(), print(data_path)
@@ -114,7 +114,7 @@ def index_ukbb_llama3(conf: Conf):
 
     logger.info(f"index {index_name}: start indexing.")
     es.bulk_index(
-        es_url=es_url, index_name=index_name, docs=df.to_dict(orient="records")
+        es_url=conf.es_url, index_name=index_name, docs=df.to_dict(orient="records")
     )
     logger.info(f"index {index_name}: done indexing.")
 
@@ -125,13 +125,13 @@ def index_hpo_bge(conf: Conf):
     if conf.trial:
         index_name = index_name + "--trial"
     index_config = INDEX_CONFIGS[alias]
-    if es.index_exists(es_url, index_name):
+    if es.index_exists(conf.es_url, index_name):
         if not conf.rewrite:
             logger.info(f"index {index_name} exists; skipping.")
             return None
         else:
-            es.drop_index(es_url, index_name)
-    es.init_index(es_url=es_url, index_name=index_name, config=index_config)
+            es.drop_index(conf.es_url, index_name)
+    es.init_index(es_url=conf.es_url, index_name=index_name, config=index_config)
 
     data_path = DATA_DIR_HPO / "embeddings_hpo.json"
     assert data_path.exists(), print(data_path)
@@ -146,7 +146,7 @@ def index_hpo_bge(conf: Conf):
 
     logger.info(f"index {index_name}: start indexing.")
     es.bulk_index(
-        es_url=es_url, index_name=index_name, docs=df.to_dict(orient="records")
+        es_url=conf.es_url, index_name=index_name, docs=df.to_dict(orient="records")
     )
     logger.info(f"index {index_name}: done indexing.")
 
@@ -157,13 +157,13 @@ def index_hpo_llama3(conf: Conf):
     if conf.trial:
         index_name = index_name + "--trial"
     index_config = INDEX_CONFIGS[alias]
-    if es.index_exists(es_url, index_name):
+    if es.index_exists(conf.es_url, index_name):
         if not conf.rewrite:
             logger.info(f"index {index_name} exists; skipping.")
             return None
         else:
-            es.drop_index(es_url, index_name)
-    es.init_index(es_url=es_url, index_name=index_name, config=index_config)
+            es.drop_index(conf.es_url, index_name)
+    es.init_index(es_url=conf.es_url, index_name=index_name, config=index_config)
 
     data_path = DATA_DIR_HPO / "embeddings_hpo_llama3.json"
     assert data_path.exists(), print(data_path)
@@ -183,7 +183,7 @@ def index_hpo_llama3(conf: Conf):
 
     logger.info(f"index {index_name}: start indexing.")
     es.bulk_index(
-        es_url=es_url, index_name=index_name, docs=df.to_dict(orient="records")
+        es_url=conf.es_url, index_name=index_name, docs=df.to_dict(orient="records")
     )
     logger.info(f"index {index_name}: done indexing.")
 

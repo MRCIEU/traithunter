@@ -68,6 +68,29 @@ services:
     depends_on:
       - elasticsearch
 
+  elasticsearch-new:
+    image: elasticsearch:8.15.0
+    restart: unless-stopped
+    ports:
+      - ${DOCKER_ES_NEW_PORT:-6360}:9200
+    tty: true
+    volumes:
+      - phenotype_es_data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - path.repo=/usr/share/elasticsearch/backup
+
+  kibana-new:
+    image: kibana:8.15.0
+    restart: unless-stopped
+    ports:
+      - ${DOCKER_KIBANA_NEW_PORT:-6365}:5601
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch-new:9200"
+    depends_on:
+      - elasticsearch-new
+
 volumes:
   phenotype_es_data:
     driver: local
