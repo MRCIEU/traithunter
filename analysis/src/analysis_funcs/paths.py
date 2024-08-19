@@ -9,7 +9,7 @@ assert analysis_root.exists(), analysis_root
 
 data = {
     "artifacts": data_root / "artifacts",
-    "efo": data_root / "efo-v3.43" / "efo.json",
+    "efo": data_root / "source" / "efo-v3.43" / "efo.json",
 }
 data["artifacts"].mkdir(exist_ok=True)
 
