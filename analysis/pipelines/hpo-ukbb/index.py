@@ -193,7 +193,7 @@ def main():
     conf = make_conf()
 
     # init
-    init()
+    init(conf=conf)
 
     # ukbb_bge
     index_ukbb_bge(conf=conf)
