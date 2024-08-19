@@ -37,8 +37,9 @@ fmt:
 lint:
 	python -m flake8 \
 		$(python_files)
-	python -m mypy \
-		$(python_files)
+	# TODO: renable mypy once dependency is locked
+	# python -m mypy \
+	# 	$(python_files)
 
 
 #################################################################################
