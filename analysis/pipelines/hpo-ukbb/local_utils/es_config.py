@@ -78,9 +78,6 @@ index_config_ukbiobank_bge = {
             "description": {
                 "type": "text",
             },
-            "type": {
-                "type": "keyword",
-            },
             "vector_title": {
                 "type": "dense_vector",
                 "dims": 768,

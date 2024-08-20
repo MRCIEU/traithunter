@@ -218,7 +218,7 @@ def index_hpo_llama3(conf: Conf):
         vector_full=lambda df: df["vector_full"].apply(lambda x: x[0]),
     )
 
-    def generate_docs():
+    def generate_docs(df):
         for idx, row in df.iterrows():
             yield {
                 "_index": index_name,
@@ -230,6 +230,17 @@ def index_hpo_llama3(conf: Conf):
                 "vector_title": row["vector_title"],
                 "vector_full": row["vector_full"],
             }
+
+    if not conf.dry_run:
+        logger.info(f"index {index_name}: start indexing.")
+        client = Elasticsearch(conf.es_url)
+        client.info()
+        df_list = np.array_split(df, 30)
+        for idx, _ in enumerate(df_list):
+            logger.info(f"{idx}")
+            helpers.bulk(client, generate_docs(df=_))
+        logger.info(f"index {index_name}: done indexing.")
+
 
 def index_icd10_bge(conf: Conf):
     alias = "icd10-bge"
