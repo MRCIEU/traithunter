@@ -3,7 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from strawberry.asgi import GraphQL
 
-from app.api import utils
+from app.api import utils, entity
 from app.graphql_api.schema import schema
 
 TITLE = "Phenotype mapping"
@@ -23,3 +23,4 @@ graphql_app = GraphQL(schema)
 app.add_route("/graphql", graphql_app)
 app.add_websocket_route("/graphql", graphql_app)
 app.include_router(utils.router, tags=["utils"])
+app.include_router(entity.router, tags=["entity"])

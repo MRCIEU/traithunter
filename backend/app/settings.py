@@ -1,6 +1,6 @@
 from pathlib import Path
 
-ES_URL = "http://elasticsearch:9200"
+ES_URL = "http://elasticsearch-new:9200"
 
 SCISPACY_LG_PATH = (
     Path("/models")
