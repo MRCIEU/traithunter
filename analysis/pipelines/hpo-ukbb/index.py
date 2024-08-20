@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
 import requests
 import simple_parsing
@@ -14,8 +15,10 @@ from local_utils.es_config import INDEX_CONFIGS, INDEX_NAMES  # isort:skip
 
 DATA_DIR_HPO = data_root / "source" / "hpo-2024-08"
 DATA_DIR_UKBB = data_root / "source" / "ukbiobank-2024-08"
+DATA_DIR_ICD10 = data_root / "source" / "icd10-2024-08"
 assert DATA_DIR_HPO.exists(), print(DATA_DIR_HPO)
 assert DATA_DIR_UKBB.exists(), print(DATA_DIR_UKBB)
+assert DATA_DIR_ICD10.exists(), print(DATA_DIR_ICD10)
 
 
 @dataclass
@@ -226,6 +229,80 @@ def index_hpo_llama3(conf: Conf):
                 "type": row["type"],
                 "vector_title": row["vector_title"],
                 "vector_full": row["vector_full"],
+            }
+
+def index_icd10_bge(conf: Conf):
+    alias = "icd10-bge"
+    index_name = INDEX_NAMES[alias]
+    if conf.trial:
+        index_name = index_name + "--trial"
+    index_config = INDEX_CONFIGS[alias]
+    if es.index_exists(conf.es_url, index_name):
+        if not conf.rewrite:
+            logger.info(f"index {index_name} exists; skipping.")
+            return None
+        else:
+            es.drop_index(conf.es_url, index_name)
+    es.init_index(es_url=conf.es_url, index_name=index_name, config=index_config)
+
+    data_path = DATA_DIR_ICD10 / "embeddings_icd10.json"
+    assert data_path.exists(), print(data_path)
+
+    logger.info(f"load {data_path}: start.")
+    df = pd.read_json(data_path)
+    df.info()
+    if conf.trial:
+        df = df[: conf.trial_limit]
+
+    def generate_docs():
+        for idx, row in df.iterrows():
+            yield {
+                "_index": index_name,
+                "id": row["id"],
+                "label": row["label"],
+                "vector_title": row["vector_title"],
+            }
+
+    if not conf.dry_run:
+        logger.info(f"index {index_name}: start indexing.")
+        client = Elasticsearch(conf.es_url)
+        client.info()
+        helpers.bulk(client, generate_docs())
+        logger.info(f"index {index_name}: done indexing.")
+
+
+def index_icd10_llama3(conf: Conf):
+    alias = "icd10-llama3"
+    index_name = INDEX_NAMES[alias]
+    if conf.trial:
+        index_name = index_name + "--trial"
+    index_config = INDEX_CONFIGS[alias]
+    if es.index_exists(conf.es_url, index_name):
+        if not conf.rewrite:
+            logger.info(f"index {index_name} exists; skipping.")
+            return None
+        else:
+            es.drop_index(conf.es_url, index_name)
+    es.init_index(es_url=conf.es_url, index_name=index_name, config=index_config)
+
+    data_path = DATA_DIR_ICD10 / "embeddings_icd10_llama3.json"
+    assert data_path.exists(), print(data_path)
+
+    logger.info(f"load {data_path}: start.")
+    df = pd.read_json(data_path)
+    df.info()
+    if conf.trial:
+        df = df[: conf.trial_limit]
+
+    df = df.assign(vector_title=lambda df: df["vector_title"].apply(lambda x: x[0]))
+
+    def generate_docs():
+        for idx, row in df.iterrows():
+            yield {
+                "_index": index_name,
+                "id": row["id"],
+                "label": row["label"],
+                "vector_title": row["vector_title"],
             }
 
     if not conf.dry_run:
