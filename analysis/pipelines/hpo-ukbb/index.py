@@ -1,9 +1,9 @@
-import json
 from dataclasses import dataclass
 
 import pandas as pd
 import requests
 import simple_parsing
+from elasticsearch import Elasticsearch, helpers
 from loguru import logger
 from simple_parsing import field
 
@@ -24,7 +24,7 @@ class Conf:
     rewrite: bool = field(alias="rewrite", action="store_true")
     es_url: str = "http://localhost:6360"
     trial: bool = field(alias="trial", action="store_true")
-    trial_limit: int = 500
+    trial_limit: int = 50
 
 
 def make_conf() -> Conf:
@@ -56,25 +56,36 @@ def index_ukbb_bge(conf: Conf):
     assert data_path.exists(), print(data_path)
 
     logger.info(f"load {data_path}: start.")
-    with data_path.open() as f:
-        df = pd.DataFrame(json.load(f))
-        logger.info(f"load {data_path}: done.")
-        if conf.trial:
-            df = df[: conf.trial_limit]
-        df.info()
+    df = pd.read_json(data_path)
+    df.info()
+    if conf.trial:
+        df = df[: conf.trial_limit]
 
     df = df.rename(
         columns={
             "title": "label",
-            "notes": "definition",
+            "notes": "description",
+            "vector_full_term": "vector_full",
         }
     )
 
-    logger.info(f"index {index_name}: start indexing.")
-    es.bulk_index(
-        es_url=conf.es_url, index_name=index_name, docs=df.to_dict(orient="records")
-    )
-    logger.info(f"index {index_name}: done indexing.")
+    def generate_docs():
+        for idx, row in df.iterrows():
+            yield {
+                "_index": index_name,
+                "id": row["id"],
+                "label": row["label"],
+                "description": row["description"],
+                "vector_title": row["vector_title"],
+                "vector_full": row["vector_full"],
+            }
+
+    if not conf.dry_run:
+        logger.info(f"index {index_name}: start indexing.")
+        client = Elasticsearch(conf.es_url)
+        client.info()
+        helpers.bulk(client, generate_docs())
+        logger.info(f"index {index_name}: done indexing.")
 
 
 def index_ukbb_llama3(conf: Conf):
@@ -95,28 +106,35 @@ def index_ukbb_llama3(conf: Conf):
     assert data_path.exists(), print(data_path)
 
     logger.info(f"load {data_path}: start.")
-    with data_path.open() as f:
-        df = pd.DataFrame(json.load(f))
-        logger.info(f"load {data_path}: done.")
-        if conf.trial:
-            df = df[: conf.trial_limit]
-        df.info()
+    df = pd.read_json(data_path)
+    df.info()
+    if conf.trial:
+        df = df[: conf.trial_limit]
 
-    df = df.rename(
-        columns={
-            "title": "label",
-            "notes": "definition",
-        }
-    ).assign(
+    df = df.rename(columns={"title": "label", "notes": "description"}).assign(
         vector_title=lambda df: df["vector_title"].apply(lambda x: x[0]),
         vector_full=lambda df: df["vector_full_term"].apply(lambda x: x[0]),
     )
+    df.info()
+    print(df.head())
 
-    logger.info(f"index {index_name}: start indexing.")
-    es.bulk_index(
-        es_url=conf.es_url, index_name=index_name, docs=df.to_dict(orient="records")
-    )
-    logger.info(f"index {index_name}: done indexing.")
+    def generate_docs():
+        for idx, row in df.iterrows():
+            yield {
+                "_index": index_name,
+                "id": row["id"],
+                "label": row["label"],
+                "description": row["description"],
+                "vector_title": row["vector_title"],
+                "vector_full": row["vector_full"],
+            }
+
+    if not conf.dry_run:
+        logger.info(f"index {index_name}: start indexing.")
+        client = Elasticsearch(conf.es_url)
+        client.info()
+        helpers.bulk(client, generate_docs())
+        logger.info(f"index {index_name}: done indexing.")
 
 
 def index_hpo_bge(conf: Conf):
@@ -137,18 +155,34 @@ def index_hpo_bge(conf: Conf):
     assert data_path.exists(), print(data_path)
 
     logger.info(f"load {data_path}: start.")
-    with data_path.open() as f:
-        df = pd.DataFrame(json.load(f))
-        logger.info(f"load {data_path}: done.")
-        if conf.trial:
-            df = df[: conf.trial_limit]
-        df.info()
+    df = pd.read_json(data_path)
+    df.info()
+    if conf.trial:
+        df = df[: conf.trial_limit]
 
-    logger.info(f"index {index_name}: start indexing.")
-    es.bulk_index(
-        es_url=conf.es_url, index_name=index_name, docs=df.to_dict(orient="records")
+    df = df.rename(
+        columns={"vector_full_term": "vector_full", "definition": "description"}
     )
-    logger.info(f"index {index_name}: done indexing.")
+
+    def generate_docs():
+        for idx, row in df.iterrows():
+            yield {
+                "_index": index_name,
+                "id": row["id"],
+                "hpo_id": row["hpo_id"],
+                "label": row["label"],
+                "description": row["description"],
+                "type": row["type"],
+                "vector_title": row["vector_title"],
+                "vector_full": row["vector_full"],
+            }
+
+    if not conf.dry_run:
+        logger.info(f"index {index_name}: start indexing.")
+        client = Elasticsearch(conf.es_url)
+        client.info()
+        helpers.bulk(client, generate_docs())
+        logger.info(f"index {index_name}: done indexing.")
 
 
 def index_hpo_llama3(conf: Conf):
@@ -169,42 +203,46 @@ def index_hpo_llama3(conf: Conf):
     assert data_path.exists(), print(data_path)
 
     logger.info(f"load {data_path}: start.")
-    with data_path.open() as f:
-        df = pd.DataFrame(json.load(f))
-        logger.info(f"load {data_path}: done.")
-        if conf.trial:
-            df = df[: conf.trial_limit]
-        df.info()
+    df = pd.read_json(data_path)
+    df.info()
+    if conf.trial:
+        df = df[: conf.trial_limit]
 
-    df = df.assign(
+    df = df.rename(
+        columns={"vector_full_term": "vector_full", "definition": "description"}
+    ).assign(
         vector_title=lambda df: df["vector_title"].apply(lambda x: x[0]),
-        vector_full=lambda df: df["vector_full_term"].apply(lambda x: x[0]),
+        vector_full=lambda df: df["vector_full"].apply(lambda x: x[0]),
     )
 
-    logger.info(f"index {index_name}: start indexing.")
-    es.bulk_index(
-        es_url=conf.es_url, index_name=index_name, docs=df.to_dict(orient="records")
-    )
-    logger.info(f"index {index_name}: done indexing.")
+    def generate_docs():
+        for idx, row in df.iterrows():
+            yield {
+                "_index": index_name,
+                "id": row["id"],
+                "hpo_id": row["hpo_id"],
+                "label": row["label"],
+                "description": row["description"],
+                "type": row["type"],
+                "vector_title": row["vector_title"],
+                "vector_full": row["vector_full"],
+            }
+
+    if not conf.dry_run:
+        logger.info(f"index {index_name}: start indexing.")
+        client = Elasticsearch(conf.es_url)
+        client.info()
+        helpers.bulk(client, generate_docs())
+        logger.info(f"index {index_name}: done indexing.")
 
 
 def main():
-    # init
     conf = make_conf()
-
-    # init
     init(conf=conf)
 
-    # ukbb_bge
     index_ukbb_bge(conf=conf)
-
-    # ukbb_llama3
     index_ukbb_llama3(conf=conf)
-
-    # hpo_bge
     index_hpo_bge(conf=conf)
-
-    # hpo_llama3
     index_hpo_llama3(conf=conf)
 
 

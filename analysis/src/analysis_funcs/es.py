@@ -51,13 +51,17 @@ def bulk_index(
 
 
 def index_chunk(es_url: str, index_name: str, docs: List[Dict[str, Any]]):
-    index_url = es_url + f"/{index_name}" + "/_bulk"
-    headers = {"Content-Type": "application/x-ndjson", "charset": "UTF-8"}
-    delim: Dict[str, Any] = {"index": {}}
+    # index_url = es_url + f"/{index_name}" + "/_bulk"
+    index_url = es_url + "/_bulk"
+    # headers = {"Content-Type": "application/x-ndjson", "charset": "UTF-8"}
+    headers = {"Content-Type": "application/json"}
+    # delim: Dict[str, Any] = {"index": {}}
+    delim: Dict[str, Any] = {"index": {"_index": index_name}}
     arr = []
     for _ in docs:
         arr.append(delim)
         arr.append(_)
     payload = "\n".join([json.dumps(_) for _ in arr]) + "\n"
+    # payload = json.dumps(_)
     r = requests.post(index_url, data=payload, headers=headers)
     r.raise_for_status()

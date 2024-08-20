@@ -40,3 +40,4 @@ dependencies:
     - python-levenshtein
     - snakemake
     - simple-parsing
+    - elasticsearch==8.15.0

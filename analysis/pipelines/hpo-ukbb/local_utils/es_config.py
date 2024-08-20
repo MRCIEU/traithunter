@@ -10,7 +10,7 @@ index_config_hpo_bge = {
             "label": {
                 "type": "text",
             },
-            "definition": {
+            "description": {
                 "type": "text",
             },
             "type": {
@@ -44,7 +44,7 @@ index_config_hpo_llama3 = {
             "label": {
                 "type": "text",
             },
-            "definition": {
+            "description": {
                 "type": "text",
             },
             "type": {
@@ -75,7 +75,7 @@ index_config_ukbiobank_bge = {
             "label": {
                 "type": "text",
             },
-            "definition": {
+            "description": {
                 "type": "text",
             },
             "type": {
@@ -106,11 +106,8 @@ index_config_ukbiobank_llama3 = {
             "label": {
                 "type": "text",
             },
-            "definition": {
+            "description": {
                 "type": "text",
-            },
-            "type": {
-                "type": "keyword",
             },
             "vector_title": {
                 "type": "dense_vector",
