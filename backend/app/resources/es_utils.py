@@ -13,7 +13,19 @@ def get_entity_query(id, dictionary):
     return query
 
 
-def get_entity_search(q, dictionary):
+def get_entity_vector_query(id, dictionary):
+    query = {
+        "query": {
+            "term": {
+                "id": id
+            }
+        },
+        "_source": ["vector_title"]
+    }
+    return query
+
+
+def search_entity_query(q, dictionary):
     if dictionary not in ["hpo"]:
         query = {
             "query": {
@@ -37,4 +49,16 @@ def get_entity_search(q, dictionary):
             },
             "_source": es_config.ENTITY_BASIC_FIELDS[dictionary]
         }
+    return query
+
+
+def knn_query(query_vector, dictionary, k):
+    query = {
+        "knn": {
+            "field": "vector_title",
+            "query_vector": query_vector,
+            "k": k
+        },
+        "_source": es_config.ENTITY_BASIC_FIELDS[dictionary]
+    }
     return query
