@@ -160,6 +160,44 @@ index_config_icd10_llama3 = {
     },
 }
 
+index_config_opengwas_bge = {
+    "mappings": {
+        "properties": {
+            "id": {
+                "type": "keyword",
+            },
+            "label": {
+                "type": "text",
+            },
+            "vector_title": {
+                "type": "dense_vector",
+                "dims": 768,
+                "index": True,
+                "similarity": "cosine",
+            },
+        }
+    },
+}
+
+index_config_opengwas_llama3 = {
+    "mappings": {
+        "properties": {
+            "id": {
+                "type": "keyword",
+            },
+            "label": {
+                "type": "text",
+            },
+            "vector_title": {
+                "type": "dense_vector",
+                "dims": 4096,
+                "index": True,
+                "similarity": "cosine",
+            },
+        }
+    },
+}
+
 INDEX_NAMES = {
     "hpo-bge": "hpo-2024-08-bge",
     "hpo-llama3": "hpo-2024-08-llama3",
@@ -167,6 +205,8 @@ INDEX_NAMES = {
     "ukbiobank-llama3": "ukbiobank-2024-08-llama3",
     "icd10-bge": "icd10-2024-08-bge",
     "icd10-llama3": "icd10-2024-08-llama3",
+    "opengwas-bge": "opengwas-2024-08-bge",
+    "opengwas-llama3": "opengwas-2024-08-llama3",
 }
 
 INDEX_CONFIGS = {
@@ -176,4 +216,6 @@ INDEX_CONFIGS = {
     "ukbiobank-llama3": index_config_ukbiobank_llama3,
     "icd10-bge": index_config_icd10_bge,
     "icd10-llama3": index_config_icd10_llama3,
+    "opengwas-bge": index_config_opengwas_bge,
+    "opengwas-llama3": index_config_opengwas_llama3,
 }
