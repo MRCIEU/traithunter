@@ -1,36 +1,35 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
+from funcs import queries
 
-st.title('Uber pickups in NYC')
+st.title("Demo: vectology-ng")
 
-DATE_COLUMN = 'date/time'
-DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
-            'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
+api_status = queries.ping()
 
-@st.cache_data
-def load_data(nrows):
-    data = pd.read_csv(DATA_URL, nrows=nrows)
-    lowercase = lambda x: str(x).lower()
-    data.rename(lowercase, axis='columns', inplace=True)
-    data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN])
-    return data
+st.write(f"API connected: {api_status}")
 
-data_load_state = st.text('Loading data...')
-data = load_data(10000)
-data_load_state.text("Done! (using st.cache_data)")
+st.caption("""
+How to use
+- First, search for an entity from a dictionary
+- Then paste the entity's id and dictionary into the search form to get matched entities
+""")
 
-if st.checkbox('Show raw data'):
-    st.subheader('Raw data')
-    st.write(data)
 
-st.subheader('Number of pickups by hour')
-hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
-st.bar_chart(hist_values)
+with st.form("entity_search"):
+    st.header("Search for an entity")
 
-# Some number in the range 0-23
-hour_to_filter = st.slider('hour', 0, 23, 17)
-filtered_data = data[data[DATE_COLUMN].dt.hour == hour_to_filter]
+    query = st.text_input(label="search for a label")
 
-st.subheader('Map of all pickups at %s:00' % hour_to_filter)
-st.map(filtered_data)
+    dictionary = st.selectbox(
+        label="choose dictionary",
+        options=("hpo", "icd10", "ukbiobank", "opengwas"),
+    )
+    entity_search_form_submit = st.form_submit_button("Confirm")
+
+
+if entity_search_form_submit:
+    st.write("dictionary", dictionary)
+    st.write("query", query)
+    entity_search_results = queries.search_entity(q=query, dictionary=dictionary)
+    if entity_search_results:
+        st.subheader("Results")
+        st.json(entity_search_results)
