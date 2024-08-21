@@ -16,13 +16,14 @@ def search_entity(q, dictionary):
     r.raise_for_status()
     return r.json()
 
-def knn(id, dictionary, dictionary_to_query, embedding_type):
+def knn(id, dictionary, dictionary_to_query, embedding_type, k):
     url = f"{API_URL}/entity/knn"
     params = {
         "id": id,
         "dictionary": dictionary,
         "dictionary_to_query": dictionary_to_query,
         "embedding_type": embedding_type,
+        "k": k
     }
     r = requests.get(url, params=params)
     r.raise_for_status()
