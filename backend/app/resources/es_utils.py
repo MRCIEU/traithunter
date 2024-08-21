@@ -58,8 +58,9 @@ def knn_query(query_vector, dictionary, k):
             "field": "vector_title",
             "query_vector": query_vector,
             "k": k,
-            "num_candidates": 100,
+            "num_candidates": 2_000,
         },
+        "size": 50,
         "_source": es_config.ENTITY_BASIC_FIELDS[dictionary]
     }
     return query
