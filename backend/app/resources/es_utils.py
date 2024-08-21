@@ -40,7 +40,7 @@ def search_entity_query(q, dictionary):
             "query": {
                 "bool": {
                     "must": [
-                        {"match": {"label": "body"}}
+                        {"match": {"label": q}}
                     ],
                     "filter": [
                         {"term": {"type": "main_item"}}
@@ -57,7 +57,8 @@ def knn_query(query_vector, dictionary, k):
         "knn": {
             "field": "vector_title",
             "query_vector": query_vector,
-            "k": k
+            "k": k,
+            "num_candidates": 100,
         },
         "_source": es_config.ENTITY_BASIC_FIELDS[dictionary]
     }
