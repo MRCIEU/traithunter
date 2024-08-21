@@ -1,0 +1,14 @@
+name: st-demo
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  # main
+  - numpy
+  - pandas
+  - requests
+  - loguru
+  - environs
+  - streamlit
+  - pip
