@@ -1,10 +1,9 @@
 name: phenotype-api
 channels:
-  - anaconda
   - conda-forge
   - defaults
 dependencies:
-  - python=3.8
+  - python=3.12
   # main
   - numpy
   - pandas
@@ -12,9 +11,6 @@ dependencies:
   - loguru
   - environs
   - pydash
-  - fastapi=0.79
-  - pydantic
-  - uvicorn
   - pytest
   # dev utils
   - ipython
@@ -26,12 +22,9 @@ dependencies:
   - mypy
   - pip
   - pip:
-    - strawberry-graphql[debug-server]==0.123
+    - fastapi[standard]==0.112.2
     - icecream
-    - pandera==0.11
     - hypothesis
-    - jinja2
     - types-requests
     - websockets
-    - spacy==3.2
-    - scispacy
+    - fastapi-cache

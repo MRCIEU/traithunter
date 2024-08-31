@@ -15,7 +15,7 @@ def test_elasticsearch():
 
 def test_root():
     r = client.get("/")
-    assert r.ok
+    assert r.status_code == 200
 
 
 def test_ping():

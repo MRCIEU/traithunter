@@ -1,12 +1,9 @@
 import requests
-from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter
 
 from app.resources.es_config import INDEX_NAMES
 from app.settings import ES_URL
 
-templates = Jinja2Templates(directory="templates")
 router = APIRouter()
 
 
@@ -26,10 +23,3 @@ def ping(dependencies: bool = True) -> bool:
 @router.get("/utils/es-status")
 def es_status():
     return INDEX_NAMES
-
-
-@router.get("/schema", response_class=HTMLResponse, include_in_schema=False)
-async def graphql_schema(request: Request):
-    return templates.TemplateResponse(
-        "index.html", context={"request": request}
-    )

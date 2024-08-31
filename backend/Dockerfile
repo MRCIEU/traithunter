@@ -12,3 +12,5 @@ COPY common_funcs/setup.cfg \
   common_funcs/setup.py \
   /common_funcs/
 RUN python -m pip install -e /common_funcs
+# Add this to activate the environment when using docker exec
+ENV PATH "$MAMBA_ROOT_PREFIX/bin:$PATH"

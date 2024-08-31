@@ -21,11 +21,6 @@ run_prod:
 	uvicorn app.main:app \
 	--host 0.0.0.0 --port 80
 
-## Generate graphql sdl schema
-generate_schema:
-	strawberry export-schema app.main:schema \
-	> static/schema.graphql
-
 ## ==== codebase ====
 
 ## Format codebase, no imports
