@@ -3,8 +3,8 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from app.settings import ES_URL
 from app.resources.es_config import INDEX_NAMES
+from app.settings import ES_URL
 
 templates = Jinja2Templates(directory="templates")
 router = APIRouter()
