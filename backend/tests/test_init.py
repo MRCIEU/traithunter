@@ -1,6 +1,10 @@
 import requests
+from fastapi.testclient import TestClient
 
 from app import settings
+from app.main import app
+
+client = TestClient(app)
 
 
 def test_elasticsearch():
@@ -9,6 +13,16 @@ def test_elasticsearch():
     assert r.ok, r.text
 
 
-def test_model_path():
-    model_path = settings.SCISPACY_LG_PATH
-    assert model_path.exists(), model_path
+def test_root():
+    r = client.get("/")
+    assert r.ok
+
+
+def test_ping():
+    r = client.get("/ping")
+    assert r.json() is True
+
+
+def test_ping_dependencies():
+    r = client.get("/ping", params={"dependencies": True})
+    assert r.json() is True

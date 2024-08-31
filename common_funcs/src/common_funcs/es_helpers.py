@@ -7,7 +7,9 @@ from .common_types import VectorEntItem
 
 
 def query_vector_term(
-    term_vector: List[float], es_url: str, score_threshold: float = 0.8,
+    term_vector: List[float],
+    es_url: str,
+    score_threshold: float = 0.8,
 ) -> List[VectorEntItem]:
     def _format(item: Dict[str, Any]) -> VectorEntItem:
         res = item["_source"].copy()

@@ -21,6 +21,7 @@ services:
       context: ./
       dockerfile: backend/Dockerfile
     restart: unless-stopped
+    user: "${UID}:${GID}"
     ports:
       - ${DOCKER_BACKEND_PORT:-8645}:80
     command: bash -c "make run"
