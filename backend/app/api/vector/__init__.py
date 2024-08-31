@@ -1,11 +1,28 @@
+from itertools import permutations
+from typing import List
+
+import numpy as np
 import requests
 from fastapi import APIRouter
 from loguru import logger
+from pydantic import BaseModel
+from sklearn.metrics.pairwise import cosine_similarity
 
 from app.resources import es_config, es_utils
 from app.settings import ES_URL
 
 router = APIRouter()
+
+
+class Entity(BaseModel):
+    entity_id: str
+    dictionary: str
+
+
+class PairwiseInput(BaseModel):
+    entities: List[Entity]
+    # TODO: change this to enum of embedding types
+    embedding_type: str
 
 
 @router.get("/entity/vector/get")
@@ -74,5 +91,45 @@ async def get_vector_knn(
     res = [
         {"item": _["_source"], "score": _["_score"]}
         for _ in response["hits"]["hits"]
+    ]
+    return res
+
+
+@router.post("/entity/vector/pairwise-similarity")
+async def post_pairwise_similarity(input: PairwiseInput):
+    # TODO: formalise validation
+    assert len(input.entities) <= 15
+    params = [
+        {
+            "id": _.entity_id,
+            "dictionary": _.dictionary,
+            "embedding_type": input.embedding_type,
+        }
+        for _ in input.entities
+    ]
+    logger.info(params)
+    vectors = [
+        await get_vector_get(
+            id=_["id"],
+            dictionary=_["dictionary"],
+            embedding_type=_["embedding_type"],
+        )
+        for _ in params
+    ]
+    cosine_res = cosine_similarity(np.array(vectors))
+    perm = permutations(range(len(params)), 2)
+    res = [
+        {
+            "entity-a": {
+                "id": params[_[0]]["id"],
+                "dictionary": params[_[0]]["dictionary"],
+            },
+            "entity-b": {
+                "id": params[_[1]]["id"],
+                "dictionary": params[_[1]]["dictionary"],
+            },
+            "similarity_score": float(cosine_res[_[0], _[1]]),
+        }
+        for _ in list(perm)
     ]
     return res

@@ -33,3 +33,33 @@ def test_get_vector_knn():
     res = r.json()
     assert res is not None
     assert isinstance(res, list)
+
+
+def test_post_pairwise_similarity():
+    url = "/entity/vector/pairwise-similarity"
+    payload = {
+        "entities": [
+            {
+                "entity_id": "ieu-b-40",
+                "dictionary": "opengwas",
+            },
+            {
+                "entity_id": "ieu-a-296",
+                "dictionary": "opengwas",
+            },
+            {
+                "entity_id": "ieu-a-7",
+                "dictionary": "opengwas",
+            },
+            {
+                "entity_id": "ieu-a-1102",
+                "dictionary": "opengwas",
+            },
+        ],
+        "embedding_type": "bge",
+    }
+    r = client.post(url=url, json=payload)
+    r.raise_for_status()
+    res = r.json()
+    assert res is not None
+    assert isinstance(res, list)

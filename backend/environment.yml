@@ -12,6 +12,7 @@ dependencies:
   - environs
   - pydash
   - pytest
+  - scikit-learn
   # dev utils
   - ipython
   - black
