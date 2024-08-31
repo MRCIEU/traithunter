@@ -27,4 +27,4 @@ dependencies:
     - hypothesis
     - types-requests
     - websockets
-    - fastapi-cache
+    - fastapi-cache2
