@@ -9,7 +9,9 @@ router = APIRouter()
 
 
 @router.get("/entity/vector/get")
-def get_vector_get(id: str, dictionary: str, embedding_type: str = "bge"):
+async def get_vector_get(
+    id: str, dictionary: str, embedding_type: str = "bge"
+):
     """
     Get the embedding vector for the entity of interest, by its id.
 
@@ -32,7 +34,7 @@ def get_vector_get(id: str, dictionary: str, embedding_type: str = "bge"):
 
 
 @router.get("/entity/vector/knn")
-def get_entity_knn(
+async def get_vector_knn(
     id: str,
     dictionary: str,
     dictionary_to_query: str,
@@ -53,7 +55,7 @@ def get_entity_knn(
         embedding_type
     )
 
-    query_vector = get_vector_get(
+    query_vector = await get_vector_get(
         id=id, dictionary=dictionary, embedding_type=embedding_type
     )
 

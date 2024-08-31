@@ -26,3 +26,10 @@ def test_ping():
 def test_ping_dependencies():
     r = client.get("/ping", params={"dependencies": True})
     assert r.json() is True
+
+
+def test_es_status():
+    r = client.get("/es-status")
+    res = r.json()
+    assert res is not None
+    assert isinstance(res, dict)

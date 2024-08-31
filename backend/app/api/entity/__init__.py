@@ -9,10 +9,11 @@ router = APIRouter()
 
 
 # TODO: replace embedding index with info index
+# when info indices ready
 @router.get("/entity/info/get")
-def get_vector_get(id: str, dictionary: str):
+async def get_entity_info_get(id: str, dictionary: str):
     """
-    Get the embedding vector for the entity of interest, by its id.
+    Get basic information for the entity of interest, by its id.
 
     - dictionary: hpo, ukbiobank, icd10, opengwas
     """
@@ -24,12 +25,14 @@ def get_vector_get(id: str, dictionary: str):
     r = requests.post(index_url, json=query)
     r.raise_for_status()
     response = r.json()
-    res = response["hits"]["hits"]
+    sources = [_["_source"] for _ in response["hits"]["hits"]]
+    assert len(sources) == 1, logger.info(sources)
+    res = sources[0]
     return res
 
 
 @router.get("/entity/info/search")
-def get_entity_search(q: str, dictionary: str):
+async def get_entity_info_search(q: str, dictionary: str):
     """
     Search an entity by text query on its label,
     and return the information of the corresponding entity
