@@ -6,7 +6,6 @@ v-app
     snackbar-widget
 </template>
 
-
 <script lang="ts">
 import Vue from "vue";
 import AppBar from "@/components/AppBar.vue";

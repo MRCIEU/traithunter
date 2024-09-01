@@ -5,4 +5,3 @@ export type BaseEnt = {
   ent_term: string;
   dictionary: string;
 };
-

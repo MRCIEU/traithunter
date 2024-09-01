@@ -1,8 +1,14 @@
 <template lang="pug">
-v-snackbar(v-model="snackbar.visible" :timeout="null" mutli-line bottom :color="snackbar.color")
+v-snackbar(
+  v-model="snackbar.visible",
+  :timeout="null",
+  mutli-line,
+  bottom,
+  :color="snackbar.color"
+)
   span(v-html="snackbar.text")
   template(v-slot:action="{ attrs }")
-    v-btn(text outlined v-bind="attrs" @click="closeSnackbar") Close
+    v-btn(text, outlined, v-bind="attrs", @click="closeSnackbar") Close
 </template>
 
 <script lang="ts">
