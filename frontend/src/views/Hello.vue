@@ -3,19 +3,15 @@ v-container
   v-card
     v-card-title
       h2 Hello World
-  v-divider
-  trait-mapping
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-import TraitMapping from "./TraitMapping.vue";
-
 export default Vue.extend({
-  name: "Home",
+  name: "Hello",
   components: {
-    TraitMapping,
+    //
   },
   data() {
     return {

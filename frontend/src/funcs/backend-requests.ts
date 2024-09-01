@@ -31,3 +31,21 @@ export async function getPing(): Promise<boolean> {
   const res = response as boolean;
   return res;
 }
+
+export async function getDictionaryOptions(): Promise<string[]> {
+  const url = `${web_backend_url}/entity/dictionary/list`;
+  const response = (await axios
+    .get(url)
+    .then((r) => {
+      return r.data;
+    })
+    .catch((e) => {
+      console.log({
+        error: e,
+        url: url,
+      });
+      snackbarError();
+    })) as unknown;
+  const res = response as string[];
+  return res;
+}
