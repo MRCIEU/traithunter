@@ -1,4 +1,4 @@
-name: phenotype-api
+name: trait-hunter-api
 channels:
   - conda-forge
   - defaults

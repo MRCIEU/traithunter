@@ -3,7 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.api import dictionary, entity, utils, vector
 
-TITLE = "Phenotype mapping"
+TITLE = "TraitHunter"
 
 app = FastAPI(title=TITLE, docs_url="/")
 app.add_middleware(

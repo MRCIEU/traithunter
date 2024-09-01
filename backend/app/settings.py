@@ -1,1 +1,1 @@
-ES_URL = "http://elasticsearch-new:9200"
+ES_URL = "http://elasticsearch:9200"
