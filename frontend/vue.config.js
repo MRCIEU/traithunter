@@ -4,7 +4,7 @@ module.exports = {
   },
   chainWebpack: (config) => {
     config.plugin("html").tap((args) => {
-      args[0].title = "ASQ";
+      args[0].title = "TraitHunter";
       return args;
     });
     config.module
