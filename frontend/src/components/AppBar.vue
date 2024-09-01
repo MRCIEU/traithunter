@@ -1,5 +1,5 @@
 <template lang="pug">
-v-app-bar(app dense flat)
+v-app-bar(id="navbar" app dense flat)
   v-toolbar-title
     tooltip(:docs="`Back to the main page`" :show-underline="false")
       v-btn(href="/" text dark)
@@ -31,12 +31,7 @@ export default Vue.extend({
 
 <style scoped>
 #navbar {
-  background-color: rgba(21, 62, 62, 0.8);
-  color: white;
-  backdrop-filter: blur(5px);
-}
-#navbar-triple {
-  background-color: rgba(188, 155, 92, 0.8);
+  background-color: rgba(146, 44, 20, 0.8);
   color: white;
   backdrop-filter: blur(5px);
 }
