@@ -80,3 +80,43 @@ export async function getEntityOptions(
     .value() as types.BaseEnt[];
   return res;
 }
+
+export async function getKnn(
+  entId: string,
+  dictionary: string,
+  dictionaryTarget: string,
+  k: number,
+  embeddingType: string,
+): Promise<types.EntWithScore[]> {
+  const url = `${web_backend_url}/entity/vector/knn`;
+  const params = {
+    id: entId,
+    dictionary: dictionary,
+    dictionary_to_query: dictionaryTarget,
+    k: k,
+    embedding_type: embeddingType,
+  };
+  const response = (await axios
+    .get(url, { params: params })
+    .then((r) => {
+      return r.data;
+    })
+    .catch((e) => {
+      console.log({
+        error: e,
+        url: url,
+        params: params,
+      });
+      snackbarError();
+    })) as unknown;
+  console.log(response);
+  const res = _.chain(response)
+    .map((e) => ({
+      ent_id: e.item.id,
+      ent_term: e.item.label,
+      dictionary: dictionaryTarget,
+      score: e.score,
+    }))
+    .value() as types.EntWithScore[];
+  return res;
+}

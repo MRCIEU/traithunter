@@ -17,15 +17,9 @@ import Vue from "vue";
 export default Vue.extend({
   name: "EntityCandidate",
   props: {
-    entId: {
-      type: String,
-    },
-    entTerm: {
-      type: String,
-    },
-    dictionary: {
-      type: String,
-    },
+    entId: String,
+    entTerm: String,
+    dictionary: String,
   },
   computed: {
     //

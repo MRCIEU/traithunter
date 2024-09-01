@@ -2,7 +2,7 @@
 v-container
   v-card
     v-card-title
-      h2 Hello World
+      h2 Trait Hunter
   v-divider
   trait-mapping
 </template>

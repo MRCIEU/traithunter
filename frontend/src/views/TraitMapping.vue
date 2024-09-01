@@ -2,8 +2,9 @@
 v-card
   v-card-title
     h2 Trait mapping
-  div
+  v-card-text
     h3 Configure search parameters
+    vue-markdown(:source="docs.traitMappingDoc")
     v-form
       v-row
         v-col
@@ -28,15 +29,14 @@ v-card
                 v-list-item-title
                   span Type to search entity by its label
             template(v-slot:selection="{ attr, on, item, selected }")
-              v-chip(
-                v-bind="attr",
-                :input-value="selected",
-                v-on="on"
-              )
+              v-chip(v-bind="attr", :input-value="selected", v-on="on")
                 span
-                  i {{ item.ent_id }}
+                  i {{ item.dictionary }}
                 |
-                span.pl-4 {{ item.ent_term }}
+                span.pl-4 {{ item.ent_id }}
+                |
+                span.pl-4
+                  b {{ item.ent_term }}
             template(v-slot:item="{ item }")
               entity-candidate(
                 :ent-id="item.ent_id",
@@ -44,6 +44,11 @@ v-card
                 :dictionary="item.dictionary"
               )
           v-subheader Target entity
+          v-select.px-4(
+            v-model="dictionaryTarget",
+            label="Select dictionary of the target entities",
+            :items="dictionaryOptions"
+          )
         v-col
           v-subheader Other parameters
           v-select.px-4(
@@ -62,25 +67,36 @@ v-card
             :max="40",
             :step="5"
           )
-      v-btn(@click="submit", color="primary") Submit
+      .d-flex.justify-center.mb-6
+        v-btn(
+          :disabled="submitBtnDisabled",
+          @click="submit",
+          color="primary",
+          large
+        ) Submit
   v-divider.py-5
-  div
+  div(v-if="knnItems.length > 0")
     h3 Results
+    knn-table(:items="knnItems")
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import EntityCandidate from "@/components/widgets/EntityCandidate.vue";
+import KnnTable from "@/components/tables/KnnTable.vue";
 
 import * as backend from "@/funcs/backend-requests";
+import * as docs from "@/resources/docs/docs";
 
 export default Vue.extend({
   name: "TraitMapping",
   components: {
     EntityCandidate,
+    KnnTable,
   },
   data() {
     return {
+      docs: docs,
       // entity search things ----
       entityToSearch: null,
       entityAcQuery: null,
@@ -88,15 +104,27 @@ export default Vue.extend({
       isEntitySearchLoading: false,
       // entity search things ----
       dictionary: null,
+      dictionaryTarget: null,
       dictionaryOptions: [],
       embeddingType: null,
       embeddingTypeOptions: ["bge", "llama3"],
       topK: 15,
+      // results
+      knnItems: [],
     };
   },
   computed: {
-    entSelectDisabled() {
+    entSelectDisabled(): boolean {
       return !this.dictionary;
+    },
+    submitBtnDisabled(): boolean {
+      const enabled =
+        this.entityToSearch &&
+        this.dictionary &&
+        this.dictionaryTarget &&
+        this.topK &&
+        this.embeddingType;
+      return !enabled;
     },
     entSelectLabel() {
       const ready = "Search and select an entity";
@@ -124,7 +152,13 @@ export default Vue.extend({
   },
   methods: {
     async submit(): Promise<void> {
-      return null;
+      this.knnItems = await backend.getKnn(
+        this.entityToSearch,
+        this.dictionary,
+        this.dictionaryTarget,
+        this.topK,
+        this.embeddingType,
+      );
     },
   },
 });
