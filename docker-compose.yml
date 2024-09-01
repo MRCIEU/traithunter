@@ -59,6 +59,36 @@ services:
     networks:
       - default
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VUE_APP_WEB_BACKEND_URL=${DOCKER_BACKEND_URL:-localhost:8635}
+    restart: always
+    ports:
+      - ${DOCKER_FRONTEND_PORT:-8636}:80
+    networks:
+      - default
+
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-dev
+      args:
+        - VUE_APP_WEB_BACKEND_URL=${DOCKER_BACKEND_DEV_URL:-localhost:8645}
+    restart: unless-stopped
+    command: sh -c "make install run"
+    volumes:
+      - ./frontend/:/app/
+    environment:
+      - NODE_ENV=development
+      - VUE_APP_WEB_BACKEND_URL=${DOCKER_BACKEND_DEV_URL:-localhost:8645}
+    ports:
+      - ${DOCKER_FRONTEND_DEV_PORT:-8646}:8080
+    networks:
+      - default
+
   elasticsearch:
     image: elasticsearch:8.15.0
     restart: unless-stopped
