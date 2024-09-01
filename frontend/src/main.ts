@@ -24,19 +24,6 @@ Vue.component("Tooltip", Tooltip);
 Vue.config.productionTip = false;
 Vue.use(fullscreen);
 
-import { gtagId } from "@/config";
-import VueGtag from "vue-gtag";
-if (gtagId !== null) {
-  Vue.use(VueGtag, {
-    config: {
-      id: gtagId,
-    },
-  });
-  console.log("EpiGraphDB-ASQ: Google analytics enabled");
-} else {
-  console.log("EpiGraphDB-ASQ: Google analytics not enabled");
-}
-
 // hide console.log when prod
 if (process.env.NODE_ENV == "production") {
   const disFunc = () => {};
