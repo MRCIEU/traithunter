@@ -28,6 +28,6 @@ export async function getPing(): Promise<boolean> {
       });
       snackbarError();
     })) as unknown;
-  const res = response;
+  const res = response as boolean;
   return res;
 }
