@@ -18,7 +18,7 @@ export default Vue.extend({
   name: "Sidebar",
   data: () => ({
     items: [{ title: "foo" }, { title: "bar" }],
-    apiConnected: false
+    apiConnected: false,
   }),
   computed: {
     currentRouteName() {

@@ -49,3 +49,34 @@ export async function getDictionaryOptions(): Promise<string[]> {
   const res = response as string[];
   return res;
 }
+
+export async function getEntityOptions(
+  q: string,
+  dictionary: string,
+): Promise<types.BaseEnt[]> {
+  const url = `${web_backend_url}/entity/info/search`;
+  const params = {
+    q: q,
+    dictionary: dictionary,
+  };
+  const response = (await axios
+    .get(url, { params: params })
+    .then((r) => {
+      return r.data;
+    })
+    .catch((e) => {
+      console.log({
+        error: e,
+        url: url,
+      });
+      snackbarError();
+    })) as unknown;
+  const res = _.chain(response)
+    .map((e) => ({
+      ent_id: e.id,
+      ent_term: e.label,
+      dictionary: dictionary,
+    }))
+    .value() as types.BaseEnt[];
+  return res;
+}
