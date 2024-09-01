@@ -1,3 +1,3 @@
-# phenotype mapping
+# TraitHunter
 
-Attempts in mapping phenotypes to EFO
+Semantic mapping of phenotypic traits across various dictionaries and extraction of these traits from literature.
