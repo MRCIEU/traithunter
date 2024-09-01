@@ -6,7 +6,7 @@ v-card.mt-3.px-3(elevation="12", width="256")
     v-divider.py-3
     v-list(dense)
       v-list-item-group(v-model="selectedItem", color="primary")
-        v-list-item(v-for="(item, idx) in items", :key="idx", link)
+        v-list-item(v-for="(item, idx) in items", :key="idx", :href="item.path", link)
           v-list-item-content
             v-list-item-title {{ item.title }}
 </template>
@@ -17,7 +17,11 @@ import { getPing } from "@/funcs/backend-requests";
 export default Vue.extend({
   name: "Sidebar",
   data: () => ({
-    items: [{ title: "foo" }, { title: "bar" }],
+    items: [
+      { title: "About", name: "About", path: "/about" },
+      { title: "Trait mapping", name: "Home", path: "/" },
+      { title: "Pairwise similarity", name: "Pairwise", path: "/pairwise" },
+    ],
     apiConnected: false,
   }),
   computed: {
@@ -25,7 +29,8 @@ export default Vue.extend({
       return this.$route.name;
     },
     selectedItem() {
-      return 0;
+      const res = this._.chain(this.items).findIndex((e) => (e.name == this.currentRouteName)).value();
+      return res;
     },
   },
   mounted: async function () {
