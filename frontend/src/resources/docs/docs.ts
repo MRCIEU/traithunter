@@ -23,3 +23,9 @@ Compute the pairwise cosine similarity scores
 for the inluded list of trait entities,
 via the text embeddings of their labels.
 `;
+
+export const dataExplorerDoc = `
+Data explorer for entities in a dictionary.
+
+NOTE: this is just a preview pilot and is subject to change.
+`;

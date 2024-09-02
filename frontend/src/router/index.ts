@@ -26,7 +26,7 @@ const routes: Array<RouteConfig> = [
     path: "/data-explorer",
     name: "DataExplorer",
     component: () =>
-      import(/* webpackChunkName: "pairwise" */ "../views/Hello.vue"),
+      import(/* webpackChunkName: "pairwise" */ "../views/DataExplorer.vue"),
   },
 ];
 
