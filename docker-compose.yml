@@ -56,6 +56,7 @@ services:
       - ./common_funcs:/common_funcs
     environment:
       - MAX_WORKERS=1
+      - ES_URL=${ES_URL:-http://elasticsearch:9200}
     networks:
       - default
 
@@ -64,7 +65,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - VUE_APP_WEB_BACKEND_URL=${DOCKER_BACKEND_URL:-localhost:8635}
+        - VUE_APP_WEB_BACKEND_URL=${FRONTEND_BACKEND_URL:-localhost:8635}
     restart: always
     ports:
       - ${DOCKER_FRONTEND_PORT:-8636}:80
@@ -108,7 +109,7 @@ services:
     ports:
       - ${DOCKER_KIBANA_PORT:-6365}:5601
     environment:
-      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+      - ELASTICSEARCH_HOSTS=${ES_URL:-http://elasticsearch:9200}
     depends_on:
       - elasticsearch
 
