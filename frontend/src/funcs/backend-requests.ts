@@ -159,3 +159,32 @@ export async function getKnn(
     .value() as types.EntWithScore[];
   return res;
 }
+
+export async function postPairwise(input, embeddingType) {
+  const url = `${web_backend_url}/entity/vector/pairwise-similarity`;
+  const payload = {
+    entities: _.chain(input)
+      .map((e) => ({
+        entity_id: e.ent_id,
+        dictionary: e.dictionary,
+      }))
+      .value(),
+    embedding_type: embeddingType,
+  };
+  const response = (await axios
+    .post(url, payload)
+    .then((r) => {
+      return r.data;
+    })
+    .catch((e) => {
+      console.log({
+        error: e,
+        url: url,
+        payload: payload,
+      });
+      snackbarError();
+    })) as unknown;
+  console.log(response);
+  const res = response;
+  return res;
+}

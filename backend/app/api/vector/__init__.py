@@ -120,11 +120,11 @@ async def post_pairwise_similarity(input: PairwiseInput):
     perm = permutations(range(len(params)), 2)
     res = [
         {
-            "entity-a": {
+            "entity_a": {
                 "id": params[_[0]]["id"],
                 "dictionary": params[_[0]]["dictionary"],
             },
-            "entity-b": {
+            "entity_b": {
                 "id": params[_[1]]["id"],
                 "dictionary": params[_[1]]["dictionary"],
             },

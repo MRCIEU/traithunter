@@ -1,19 +1,20 @@
 <template lang="pug">
-v-card
-  v-card-title
-    h2 Trait mapping
-  v-card-text
-    h3 Configure search parameters
-    vue-markdown(:source="docs.traitMappingDoc")
-    v-form
+v-container
+  v-card
+    v-card-title
+      h2 Pairwise cosine similarities
+    v-card-text
+      p
+        vue-markdown(:source="docs.pairwiseDoc")
+      h3 Step 1: Search for entities to include in the comparison
       v-row
-        v-col
-          v-subheader Source entity
+        v-col(cols="2")
           v-select.px-4(
             v-model="dictionary",
-            label="Select dictionary",
-            :items="dictionaryOptions"
+            :items="dictionaryOptions",
+            label="Select dictionary"
           )
+        v-col(cols="8")
           v-autocomplete.px-4(
             v-model="entityToSearch",
             :disabled="entSelectDisabled",
@@ -22,7 +23,7 @@ v-card
             :loading="isEntitySearchLoading",
             :items="entityOptions",
             item-text="ent_term",
-            item-value="ent_id"
+            :return-object="true"
           )
             template(v-slot:no-data)
               v-list-item
@@ -30,40 +31,44 @@ v-card
                   span Type to search entity by its label
             template(v-slot:selection="{ attr, on, item, selected }")
               v-chip(v-bind="attr", :input-value="selected", v-on="on")
-                entity-span(
-                  :ent-id="item.ent_id",
-                  :ent-term="item.ent_term",
-                  :dictionary="item.dictionary"
-                )
+                span
+                  i {{ item.dictionary }}
+                |
+                span.pl-4 {{ item.ent_id }}
+                |
+                span.pl-4
+                  b {{ item.ent_term }}
             template(v-slot:item="{ item }")
               entity-candidate(
                 :ent-id="item.ent_id",
                 :ent-term="item.ent_term",
                 :dictionary="item.dictionary"
               )
-          v-subheader Target entity
-          v-select.px-4(
-            v-model="dictionaryTarget",
-            label="Select dictionary of the target entities",
-            :items="dictionaryOptions"
-          )
         v-col
-          v-subheader Other parameters
+          v-btn(:disabled="includeBtnDisabled", @click="addEntToList") Add to list
+      div(v-if="pairwiseEntities.length > 0")
+        v-subheader Included entities
+        v-item-group(multiple)
+          v-item(
+            v-for="(item, idx) in pairwiseEntities",
+            :key="idx",
+            v-slot="{ active, toggle }"
+          )
+            v-chip(active-class="purple--text", :input-value="active")
+              entity-span(
+                :ent-id="item.ent_id",
+                :ent-term="item.ent_term",
+                :dictionary="item.dictionary"
+              )
+      v-divider
+      h3 Step 2: Configure parameters
+      v-subheader Other parameters
+      v-row
+        v-col(cols="4")
           v-select.px-4(
             v-model="embeddingType",
             label="Select embedding model",
             :items="embeddingTypeOptions"
-          )
-          v-subheader Top K neighbors
-          .pt-4
-          .pt-4
-          v-slider.px-4(
-            ticks="always",
-            thumb-label="always",
-            v-model="topK",
-            :min="10",
-            :max="40",
-            :step="5"
           )
       .d-flex.justify-center.mb-6
         v-btn(
@@ -72,27 +77,27 @@ v-card
           color="primary",
           large
         ) Submit
-  v-divider.py-5
-  div(v-if="knnItems.length > 0")
-    h3 Results
-    knn-table(:items="knnItems")
+      v-divider
+      div(v-if="pairwiseResults.length > 0")
+        h3 Results
+        pairwise-table(:items="pairwiseResults")
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import EntityCandidate from "@/components/widgets/EntityCandidate.vue";
 import EntitySpan from "@/components/widgets/EntitySpan.vue";
-import KnnTable from "@/components/tables/KnnTable.vue";
+import PairwiseTable from "@/components/tables/PairwiseTable.vue";
 
 import * as backend from "@/funcs/backend-requests";
 import * as docs from "@/resources/docs/docs";
 
 export default Vue.extend({
-  name: "TraitMapping",
+  name: "Pairwise",
   components: {
     EntityCandidate,
     EntitySpan,
-    KnnTable,
+    PairwiseTable,
   },
   data() {
     return {
@@ -104,26 +109,24 @@ export default Vue.extend({
       isEntitySearchLoading: false,
       // entity search things ----
       dictionary: null,
-      dictionaryTarget: null,
       dictionaryOptions: [],
       embeddingType: null,
       embeddingTypeOptions: ["bge", "llama3"],
-      topK: 15,
       // results
-      knnItems: [],
+      pairwiseEntities: [],
+      pairwiseResults: [],
     };
   },
   computed: {
     entSelectDisabled(): boolean {
       return !this.dictionary;
     },
+    includeBtnDisabled(): boolean {
+      const enabled = this.entityToSearch;
+      return !enabled;
+    },
     submitBtnDisabled(): boolean {
-      const enabled =
-        this.entityToSearch &&
-        this.dictionary &&
-        this.dictionaryTarget &&
-        this.topK &&
-        this.embeddingType;
+      const enabled = this.pairwiseEntities.length >= 2 && this.embeddingType;
       return !enabled;
     },
     entSelectLabel() {
@@ -151,12 +154,14 @@ export default Vue.extend({
     this.dictionaryOptions = await backend.getDictionaryOptions();
   },
   methods: {
+    addEntToList() {
+      if (!this.pairwiseEntities.includes(this.entityToSearch)) {
+        this.pairwiseEntities.push(this.entityToSearch);
+      }
+    },
     async submit(): Promise<void> {
-      this.knnItems = await backend.getKnn(
-        this.entityToSearch,
-        this.dictionary,
-        this.dictionaryTarget,
-        this.topK,
+      this.pairwiseResults = await backend.postPairwise(
+        this.pairwiseEntities,
         this.embeddingType,
       );
     },
