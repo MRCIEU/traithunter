@@ -45,3 +45,15 @@ def knn_query(query_vector, dictionary, k):
         "_source": es_config.ENTITY_BASIC_FIELDS[dictionary],
     }
     return query
+
+
+# TODO: proper pagination
+def doc_list(dictionary):
+    query = {
+        "query": {
+            "match_all": {}
+        },
+        "size": 5000,
+        "_source": ["id", "label", "description"],
+    }
+    return query
