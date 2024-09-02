@@ -4,8 +4,7 @@ v-container
     v-card-title
       h2 Pairwise cosine similarities
     v-card-text
-      p
-        vue-markdown(:source="docs.pairwiseDoc")
+      vue-markdown(:source="docs.pairwiseDoc")
       h3 Step 1: Search for entities to include in the comparison
       v-row
         v-col(cols="4")

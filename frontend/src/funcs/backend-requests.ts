@@ -189,11 +189,10 @@ export async function postPairwise(input, embeddingType) {
   return res;
 }
 
-
 export async function getEntityInfoList(dictionary) {
   const url = `${web_backend_url}/entity/info/list`;
   const params = {
-    dictionary: dictionary
+    dictionary: dictionary,
   };
   const response = (await axios
     .get(url, { params: params })

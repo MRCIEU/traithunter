@@ -3,6 +3,8 @@ v-container
   v-card
     v-card-title
       h2 Trait Hunter
+    v-card-text
+      vue-markdown(:source="docs.topDoc")
   v-divider
   trait-mapping
 </template>
@@ -12,6 +14,8 @@ import Vue from "vue";
 
 import TraitMapping from "./TraitMapping.vue";
 
+import * as docs from "@/resources/docs/docs";
+
 export default Vue.extend({
   name: "Home",
   components: {
@@ -19,7 +23,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      //
+      docs: docs,
     };
   },
   computed: {
