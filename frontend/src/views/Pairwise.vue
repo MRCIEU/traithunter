@@ -8,13 +8,13 @@ v-container
         vue-markdown(:source="docs.pairwiseDoc")
       h3 Step 1: Search for entities to include in the comparison
       v-row
-        v-col(cols="2")
+        v-col(cols="4")
           v-select.px-4(
             v-model="dictionary",
             :items="dictionaryOptions",
             label="Select dictionary"
           )
-        v-col(cols="8")
+        v-col(cols="6")
           v-autocomplete.px-4(
             v-model="entityToSearch",
             :disabled="entSelectDisabled",
@@ -158,6 +158,7 @@ export default Vue.extend({
       if (!this.pairwiseEntities.includes(this.entityToSearch)) {
         this.pairwiseEntities.push(this.entityToSearch);
       }
+      this.entityToSearch = null;
     },
     async submit(): Promise<void> {
       this.pairwiseResults = await backend.postPairwise(

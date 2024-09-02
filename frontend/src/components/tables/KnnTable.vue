@@ -1,7 +1,7 @@
 <template lang="pug">
 v-card
   v-card-title
-  v-data-table(:headers="headers", :items="items")
+  v-data-table(:headers="headers", :items="items", :items-per-page="40")
 </template>
 
 <script lang="ts">

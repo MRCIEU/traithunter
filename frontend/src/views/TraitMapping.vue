@@ -72,10 +72,10 @@ v-card
           color="primary",
           large
         ) Submit
-  v-divider.py-5
-  div(v-if="knnItems.length > 0")
-    h3 Results
-    knn-table(:items="knnItems")
+    v-divider.py-5
+    div(v-if="knnItems.length > 0")
+      h3 Results
+      knn-table(:items="knnItems")
 </template>
 
 <script lang="ts">

@@ -18,7 +18,7 @@ export default Vue.extend({
   name: "EntityCandidate",
   props: {
     entId: {
-      type: [String, Number]
+      type: [String, Number],
     },
     entTerm: String,
     dictionary: String,

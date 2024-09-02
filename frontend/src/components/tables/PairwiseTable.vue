@@ -1,7 +1,7 @@
 <template lang="pug">
 v-card
   v-card-title
-  v-data-table(:headers="headers", :items="items")
+  v-data-table(:headers="headers", :items="items", :items-per-page="20")
     template(v-slot:item.entity_a="{ item }")
       entity-candidate(
         :ent-id="item.entity_a.id",

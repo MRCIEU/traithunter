@@ -4,7 +4,7 @@ v-app-bar#navbar(app, dense, flat)
     tooltip(:docs="`Back to the main page`", :show-underline="false")
       v-btn(href="/", text, dark)
         span {{ appTitle }}
-  div.px-1
+  .px-1
   tooltip(:docs="`API`", :show-underline="false")
     v-btn(:href="apiUrl", target="blank", text, dark)
       span API
