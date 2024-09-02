@@ -3,8 +3,11 @@ v-app-bar#navbar(app, dense, flat)
   v-toolbar-title
     tooltip(:docs="`Back to the main page`", :show-underline="false")
       v-btn(href="/", text, dark)
-        span.ml-3 {{ appTitle }}
-  span.px-1
+        span {{ appTitle }}
+  div.px-1
+  tooltip(:docs="`API`", :show-underline="false")
+    v-btn(:href="apiUrl", target="blank", text, dark)
+      span API
   v-spacer
   v-btn(href="https://epigraphdb.org", target="_blank", text, dark)
     img(alt="", src="@/assets/epigraphdb-logo-white.png", height="35px")
@@ -16,10 +19,14 @@ v-app-bar#navbar(app, dense, flat)
 
 <script lang="ts">
 import Vue from "vue";
+
+import { web_backend_url } from "@/config";
+
 export default Vue.extend({
   name: "AppBar",
   data: () => ({
     appTitle: "TraitHunter",
+    apiUrl: web_backend_url,
   }),
   computed: {
     currentRouteName() {
