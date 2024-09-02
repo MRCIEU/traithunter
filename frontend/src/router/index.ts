@@ -11,14 +11,20 @@ const routes: Array<RouteConfig> = [
     component: Home,
   },
   {
+    path: "/about",
+    name: "About",
+    component: () =>
+      import(/* webpackChunkName: "pairwise" */ "../views/About.vue"),
+  },
+  {
     path: "/pairwise",
     name: "Pairwise",
     component: () =>
-      import(/* webpackChunkName: "pairwise" */ "../views/Hello.vue"),
+      import(/* webpackChunkName: "pairwise" */ "../views/Pairwise.vue"),
   },
   {
-    path: "/about",
-    name: "About",
+    path: "/data-explorer",
+    name: "DataExplorer",
     component: () =>
       import(/* webpackChunkName: "pairwise" */ "../views/Hello.vue"),
   },

@@ -1,27 +1,30 @@
 <template lang="pug">
-v-card.mt-3.px-3(elevation="12", width="256")
+v-card.mt-3.px-3(elevation="12", max-width="256")
   v-navigation-drawer(floating, permanent)
-    h1 TraitHunter
-    p API connected: {{ apiConnected }}
-    v-divider.py-3
-    v-list(dense)
+    v-list(dense, three-line)
       v-list-item-group(v-model="selectedItem", color="primary")
-        v-list-item(v-for="(item, idx) in items", :key="idx", :href="item.path", link)
+        v-list-item(
+          v-for="(item, idx) in items",
+          :key="idx",
+          :href="item.path",
+          link
+        )
           v-list-item-content
             v-list-item-title {{ item.title }}
+            v-list-item-subtitle {{ item.desc }}
+    v-divider.py-3
+    p API connected: {{ apiConnected }}
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { getPing } from "@/funcs/backend-requests";
+import { pathOutline } from "@/resources/resources";
+
 export default Vue.extend({
   name: "Sidebar",
   data: () => ({
-    items: [
-      { title: "About", name: "About", path: "/about" },
-      { title: "Trait mapping", name: "Home", path: "/" },
-      { title: "Pairwise similarity", name: "Pairwise", path: "/pairwise" },
-    ],
+    items: pathOutline,
     apiConnected: false,
   }),
   computed: {
@@ -29,7 +32,9 @@ export default Vue.extend({
       return this.$route.name;
     },
     selectedItem() {
-      const res = this._.chain(this.items).findIndex((e) => (e.name == this.currentRouteName)).value();
+      const res = this._.chain(this.items)
+        .findIndex((e) => e.name == this.currentRouteName)
+        .value();
       return res;
     },
   },
