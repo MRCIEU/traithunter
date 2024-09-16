@@ -2,20 +2,6 @@ version: "3.4"
 
 services:
 
-  # st-demo:
-  #   build:
-  #     context: ./st-demo
-  #   restart: unless-stopped
-  #   ports:
-  #     - ${ST_DEMO_PORT:-8646}:80
-  #   command: bash -c "streamlit run streamlit_app.py --server.port=80 --server.address=0.0.0.0"
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - ./st-demo/:/app
-  #   networks:
-  #     - default
-
   backend:
     build:
       context: ./
