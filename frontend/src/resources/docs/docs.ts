@@ -10,6 +10,8 @@ The dictionaries we curate and offer search functionalities include:
 - ICD10 codes (2024-08)
 - HPO ontology terms (2024-08)
 - UKBiobank variables (2024-08)
+
+Further information can be found at the [About page](/about).
 `;
 
 export const aboutDesc = `
