@@ -13,23 +13,31 @@ v-container
     v-tab-item
       trait-mapping
     v-tab-item
+      vue-markdown(:source="tutorialDocs.traitMappingTutorial")
+      prism(language="python", :code="tutorialDocs.pingSnippet.trim()")
+      prism(language="python", :code="tutorialDocs.traitMappingSnippet.trim()")
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import Prism from "vue-prism-component";
+import "prismjs/components/prism-python";
 
 import TraitMapping from "@/components/TraitMapping.vue";
 
 import * as docs from "@/resources/docs/docs";
+import * as tutorialDocs from "@/resources/docs/api-examples";
 
 export default Vue.extend({
   name: "Home",
   components: {
     TraitMapping,
+    Prism,
   },
   data() {
     return {
       docs: docs,
+      tutorialDocs: tutorialDocs,
       tab: 0,
     };
   },

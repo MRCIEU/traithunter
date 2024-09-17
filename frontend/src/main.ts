@@ -13,6 +13,9 @@ Vue.use(VueLodash, { name: "custom", lodash: lodash });
 
 import "@/plugins/general.css";
 
+import "prismjs";
+import "prism-themes/themes/prism-gruvbox-dark.css";
+
 import VueMarkdown from "@adapttive/vue-markdown";
 import JsonViewer from "vue-json-viewer";
 import "@/plugins/json-viewer-gruvbox-dark.scss";
