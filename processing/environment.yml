@@ -1,0 +1,37 @@
+name: traithunter-processing
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.10
+  # dev
+  - black
+  - isort
+  - autoflake
+  - flake8
+  - jupyterlab
+  - nodejs
+  - mypy
+  - pytest
+  # rest
+  - pip
+  - pip:
+    - ray
+    - unidecode
+    - scispacy
+    - spacy
+    - pandas
+    - polars
+    - pandera
+    - altair
+    - tqdm
+    - snakemake
+    - simple-parsing
+    - pydash
+    - loguru
+    - icecream
+    - environs
+    - jupyterlab_execute_time
+    - elasticsearch==8.15.0
