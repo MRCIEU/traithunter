@@ -1,0 +1,13 @@
+- refactor analysis to processing
+- processing
+  - makefile
+  - snakemake
+  - pipelines
+    - extraction
+    - preproc
+    - embed
+    - indexing
+  - scripts
+    - health-check
+- health-check.py
+  - current indices and num docs
