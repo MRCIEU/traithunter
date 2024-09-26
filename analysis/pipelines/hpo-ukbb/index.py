@@ -412,17 +412,17 @@ def main():
     conf = make_conf()
     init(conf=conf)
 
-    # index_ukbb_bge(conf=conf)
-    # index_ukbb_llama3(conf=conf)
+    index_ukbb_bge(conf=conf)
+    index_ukbb_llama3(conf=conf)
 
-    # index_icd10_bge(conf=conf)
-    # index_icd10_llama3(conf=conf)
+    index_icd10_bge(conf=conf)
+    index_icd10_llama3(conf=conf)
 
     index_opengwas_bge(conf=conf)
     index_opengwas_llama3(conf=conf)
 
-    # index_hpo_bge(conf=conf)
-    # index_hpo_llama3(conf=conf)
+    index_hpo_bge(conf=conf)
+    index_hpo_llama3(conf=conf)
 
 
 if __name__ == "__main__":
